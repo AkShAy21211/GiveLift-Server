@@ -6,7 +6,7 @@
   "scripts": {
     "eslint:fix": "eslint --fix . --ext .ts",
     "build": "tsc",
-    "dev": "concurrently \"tsc --watch\" \"nodemon\"",
+    "dev": "nodemon",
     "start": "node dist/index.js"
   },
   "author": "",
@@ -17,6 +17,7 @@
     "concurrently": "^8.2.2",
     "nodemon": "^3.1.9",
     "ts-node": "^10.9.2",
+    "tsx": "^4.19.2",
     "typescript": "^5.7.3"
   },
   "dependencies": {
