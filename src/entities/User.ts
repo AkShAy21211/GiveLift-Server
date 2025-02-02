@@ -10,7 +10,9 @@ export interface User {
   name: string;
   email: string;
   phone: string;
+  password: string;
   role: string;
+  isVolunteer:boolean;
   address?: Address;
   createdAt?: Date;
   updatedAt?: Date;

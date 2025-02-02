@@ -1,11 +1,14 @@
-import ExpressApp from "./infrastructure/app/app.js";
+import ExpressApp from "./infrastructure/config/app/app.js";
+import Logger from "./infrastructure/utils/logger.js";
 
 const start = () => {
   const app = new ExpressApp();
-  const PORT = process.env.PORT||3000;
+  const PORT = process.env.PORT || 3000;
   try {
+    app.configureConnections();
     app.startServer(PORT);
   } catch (error) {
+    Logger.error("Error starting the server", error);
     process.exit(1);
   }
 };
