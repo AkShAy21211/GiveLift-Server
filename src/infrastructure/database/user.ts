@@ -14,6 +14,10 @@ const userSchema = new Schema<UserDocument>(
       required: true,
       unique: true,
     },
+    avatar:{
+      type: String,
+      required: false,
+    },
     phone: {
       type: String,
       required: true,

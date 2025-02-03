@@ -1,6 +1,5 @@
 export interface Address {
-  latitude: number;
-  longitude: number;
+  coord:[number]
   district: string;
   city: string;
 }
@@ -10,6 +9,7 @@ export interface User {
   name: string;
   email: string;
   phone: string;
+  avatar?: string;
   password: string;
   role: string;
   isVolunteer:boolean;
