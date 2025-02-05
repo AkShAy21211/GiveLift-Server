@@ -2,7 +2,7 @@ import express, { Express } from "express";
 import Logger from "../../utils/logger.js";
 import dotenv from "dotenv";
 import connectToDataBase from "../db/mongo.js";
-import userRoute from "../../routes/userRoute.js";
+import userRoute from "../../routes/authRoute.js";
 import ENVS from "../envConfig.js";
 import morgan from "morgan";
 dotenv.config();

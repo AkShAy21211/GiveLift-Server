@@ -1,15 +1,20 @@
 import { Request, Response } from "express-serve-static-core";
 
 import IUserUseCase from "../interfaces/use-cases/userUseCase.interface.js";
-import { LoginUserDto, RegisterUserDto } from "../interfaces/dtos/userDtos.js";
 import {
+  ForgetPasswordDto,
+  LoginUserDto,
+  RegisterUserDto,
+} from "../interfaces/dtos/userDtos.js";
+import {
+  forgetPasswordDtoValidator,
   userCreateValidator,
   userLoginValidator,
 } from "../infrastructure/utils/validation.js";
 import { STATUS_CODES, USER_MESSAGES } from "../constants/statusCodes.js";
 import Logger from "../infrastructure/utils/logger.js";
 
-class UserController {
+class AuthController {
   constructor(private _userUseCase: IUserUseCase) {}
 
   async register(req: Request<{}, {}, RegisterUserDto>, res: Response) {
@@ -71,9 +76,32 @@ class UserController {
     }
   }
 
-  forgetPassword(req:Request,res:Response){
-    
+  async forgetPassword(req: Request<{}, {}, ForgetPasswordDto>, res: Response) {
+    const { body } = req;
+
+    // Validate user input using Joi
+    const { error } = forgetPasswordDtoValidator.validate(body);
+    if (error) {
+      return res.status(STATUS_CODES.BAD_REQUEST).json({
+        message: error.details[0].message,
+      });
+    }
+    try {
+      // Send password reset otp to the user's phone number
+       await this._userUseCase.sendOtpForForgetPassword(body.phone);
+
+      return res.status(STATUS_CODES.OK).json({
+        message: USER_MESSAGES.OTP_SEND,
+      });
+    } catch (error: any) {
+      Logger.error(error);
+      return res
+        .status(error.statusCode || STATUS_CODES.INTERNAL_SERVER_ERROR)
+        .json({
+          message: error.message || USER_MESSAGES.INTERNAL_SERVER_ERROR,
+        });
+    }
   }
 }
 
-export default UserController;
+export default AuthController;
