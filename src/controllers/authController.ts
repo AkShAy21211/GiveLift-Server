@@ -5,6 +5,7 @@ import {
   ForgetPasswordDto,
   LoginUserDto,
   RegisterUserDto,
+  VerifyForgetPasswordDto,
 } from "../interfaces/dtos/userDtos.js";
 import {
   forgetPasswordDtoValidator,
@@ -88,10 +89,41 @@ class AuthController {
     }
     try {
       // Send password reset otp to the user's phone number
-       await this._userUseCase.sendOtpForForgetPassword(body.phone);
+      const user = await this._userUseCase.sendOtpForForgetPassword(body.phone);
+
+      console.log(user);
+
+      res.cookie("email", user.email, {
+        // 5minutes expiry
+        expires: new Date(Date.now() + 5 * 60 * 1000),
+        httpOnly: true,
+        secure: false,
+      });
 
       return res.status(STATUS_CODES.OK).json({
         message: USER_MESSAGES.OTP_SEND,
+      });
+    } catch (error: any) {
+      Logger.error(error);
+      return res
+        .status(error.statusCode || STATUS_CODES.INTERNAL_SERVER_ERROR)
+        .json({
+          message: error.message || USER_MESSAGES.INTERNAL_SERVER_ERROR,
+        });
+    }
+  }
+
+  async verifyForgetPassword(
+    req: Request<{}, {}, VerifyForgetPasswordDto>,
+    res: Response
+  ) {
+    try {
+      const { body } = req;
+      const email:string = req.cookies.email;
+
+      await this._userUseCase.verifyOtpForForgetPassword(email, body.otp);
+      return res.status(STATUS_CODES.OK).json({
+        message: USER_MESSAGES.OTP_VERIFICATION_SUCCESS,
       });
     } catch (error: any) {
       Logger.error(error);

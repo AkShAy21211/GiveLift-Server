@@ -4,7 +4,6 @@ import ENVS from "../../infrastructure/config/envConfig.js";
 import { USER_MESSAGES } from "../../constants/statusCodes.js";
 import Logger from "../../infrastructure/utils/logger.js";
 
-
 class Twilio {
   private client: twilio.Twilio;
   private senderPhone: string;
@@ -22,8 +21,6 @@ class Twilio {
         to: `+91${phone}`,
       });
 
-
-      
       return true;
     } catch (error) {
       Logger.error("Twilio Error:", error);
@@ -51,7 +48,8 @@ class Twilio {
 
   async compareOTP(savedOTP: string, enteredOTP: string) {
     try {
-      return await bcrypt.compare(enteredOTP, savedOTP);
+      const isValid =  await bcrypt.compare(enteredOTP, savedOTP);
+      return isValid;
     } catch (error) {
       Logger.error("Bcrypt Error:", error);
     }

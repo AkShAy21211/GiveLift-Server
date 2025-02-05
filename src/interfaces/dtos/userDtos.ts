@@ -22,3 +22,7 @@ export interface LoginUserDto{
 export interface ForgetPasswordDto{
   phone: string;
 }
+
+export interface VerifyForgetPasswordDto{
+  otp: string;
+}

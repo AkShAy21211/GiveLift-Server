@@ -5,25 +5,32 @@ import AppError from "../utils/AppError.js";
 import Logger from "../utils/logger.js";
 
 class OtpRepository implements IOtpRepository {
-  async saveOTP(otpData: object): Promise<Otp|null> {
+  async saveOTP(otpData: object): Promise<Otp | null> {
     try {
       const otp = new OtpModel(otpData);
       return await otp.save();
     } catch (error) {
       Logger.error(` Failed to save otp data: ${error}`);
-      return null; 
-
+      return null;
     }
   }
-  async getOTPByMail(email: string): Promise<Otp | null> {
+  async getOtpByEmail(email: string): Promise<Otp | null> {
     try {
       return await OtpModel.findOne({ email });
     } catch (error) {
       Logger.error(`Failed to find otp by email: ${error}`);
-      return null; 
+      return null;
+    }
+  }
+  async deleteOtp(otp: string): Promise<boolean> {
+    try {
+      const result = await OtpModel.deleteOne({ otp });
+      return result.deletedCount > 0;
+    } catch (error) {
+      Logger.error(`Failed to delete OTP: ${error}`);
+      return false;
     }
   }
 }
 
-
-export default OtpRepository
+export default OtpRepository;

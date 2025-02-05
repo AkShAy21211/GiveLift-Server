@@ -120,7 +120,7 @@ class UserUseCase implements IUserUseCase {
     }
   }
 
-  async sendOtpForForgetPassword(phone: string): Promise<void> {
+  async sendOtpForForgetPassword(phone: string): Promise<User> {
     try {
       const existingUser = await this._userRepository.findUserByEmailOrPhone(
         "",
@@ -156,6 +156,29 @@ class UserUseCase implements IUserUseCase {
           STATUS_CODES.INTERNAL_SERVER_ERROR
         );
       }
+
+      return existingUser;
+    } catch (error: any) {
+      throw new AppError(error.message, error.statusCode);
+    }
+  }
+  async verifyOtpForForgetPassword(email: string, otp: string): Promise<void> {
+    try {
+      const otpEntity = await this._otpRepository.getOtpByEmail(email);
+
+      if (!otpEntity) {
+        throw new AppError(
+          USER_MESSAGES.OTP_NOTFOUND,
+          STATUS_CODES.BAD_REQUEST
+        );
+      }
+      const isValidOtp = await this._twilio.compareOTP(otpEntity.otp, otp);
+
+      if (!isValidOtp) {
+        throw new AppError(USER_MESSAGES.OTP_EXPIRED, STATUS_CODES.BAD_REQUEST);
+      }
+
+      await this._otpRepository.deleteOtp(otpEntity.otp);
     } catch (error: any) {
       throw new AppError(error.message, error.statusCode);
     }

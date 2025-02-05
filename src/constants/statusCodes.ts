@@ -22,8 +22,9 @@ export enum USER_MESSAGES {
   REGISTRATION_FAILED = 'Registration failed',
   INTERNAL_SERVER_ERROR = 'Internal server error',
   OTP_CREATETION_FAILED = 'OTP creation failed',
-  OTP_VERIFICATION_FAILED = 'OTP verification failed',
-  OTP_EXPIRED = 'OTP expired',
+  OTP_NOTFOUND = 'Invaalid OTP or expired',
+  OTP_EXPIRED = 'Invaalid OTP or expired',
+  OTP_VERIFICATION_SUCCESS = 'OTP verification succeeded',
   OTP_SEND_FAILED = 'OTP send failed',
   OTP_SEND = 'OTP has been send to your mobile number'
 }

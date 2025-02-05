@@ -42,4 +42,9 @@ router.post("/forget-password", (req: Request, res: Response) => {
   authController.forgetPassword(req, res);
 });
 
+
+
+router.post("/forget-password/verify", (req: Request, res: Response) => {
+  authController.verifyForgetPassword(req, res);
+});
 export default router;
