@@ -37,7 +37,7 @@ const userSchema = new Schema<UserDocument>(
       default: false,
     },
     address: {
-      coord: {
+      coordinates: {
         type: [Number],
         required: false,
       },

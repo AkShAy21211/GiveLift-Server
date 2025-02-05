@@ -1,7 +1,6 @@
 import { User } from "../../domain/entities/User.js";
 import IUserRepository from "../../domain/interfaces/userRepository.interface.js";
-import UserModel from "../database/user.js";
-import AppError from "../utils/AppError.js";
+import UserModel from "../models/user.js";
 import Logger from "../utils/logger.js";
 
 class UserRepository implements IUserRepository {

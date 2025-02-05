@@ -1,7 +1,6 @@
 import Otp from "../../domain/entities/Otp.js";
 import IOtpRepository from "../../domain/interfaces/otpRepository.interfae.js";
-import OtpModel from "../database/otp.js";
-import AppError from "../utils/AppError.js";
+import OtpModel from "../models/otp.js";
 import Logger from "../utils/logger.js";
 
 class OtpRepository implements IOtpRepository {
