@@ -1,6 +1,6 @@
 import express from "express";
 import UserRepository from "../repositories/userRepository.js";
-import UserUseCase from "../../usecases/userUseCase.js";
+import AuthrUseCase from "../../usecases/authUseCase.js";
 import AuthController from "../../controllers/authController.js";
 import BCrypt from "../utils/bcrypt.js";
 import { Request, Response } from "express-serve-static-core";
@@ -18,14 +18,14 @@ const otpManager = new Twilio();
 // �� Set up dependencies in the auth controller
 const userRepository = new UserRepository();
 
-const userUseCase = new UserUseCase(
+const authUseCase = new AuthrUseCase(
   userRepository,
   bcrypt,
   jwt,
   otpRepository,
   otpManager
 );
-const authController = new AuthController(userUseCase);
+const authController = new AuthController(authUseCase);
 
 // 🔹 Register a new user
 router.post("/sign-up", (req: Request, res: Response) => {

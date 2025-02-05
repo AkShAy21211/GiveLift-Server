@@ -2,8 +2,8 @@ import express, { Express } from "express";
 import Logger from "../../utils/logger.js";
 import dotenv from "dotenv";
 import connectToDataBase from "../db/mongo.js";
-import userRoute from "../../routes/authRoute.js";
-import ENVS from "../envConfig.js";
+import authRoute from "../../routes/authRoute.js";
+import userRoute from "../../routes/userRoute.js";
 import morgan from "morgan";
 import cookieParser from "cookie-parser";
 dotenv.config();
@@ -16,7 +16,8 @@ class ExpressApp {
     this._app.use(cookieParser())
     this._app.use(express.urlencoded({ extended: true }));
     this.app.use(morgan("tiny"));
-    this.app.use("/api/user", userRoute);
+    this.app.use("/api/auth", authRoute);
+    this.app.use("/api/user",userRoute)
   }
 
   public get app(): Express {

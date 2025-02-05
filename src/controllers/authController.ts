@@ -1,6 +1,5 @@
 import { Request, Response } from "express-serve-static-core";
-
-import IUserUseCase from "../interfaces/use-cases/userUseCase.interface.js";
+import IAuthUseCase from "../interfaces/use-cases/authUseCase.interface.js";
 import {
   ForgetPasswordDto,
   LoginUserDto,
@@ -16,7 +15,7 @@ import { STATUS_CODES, USER_MESSAGES } from "../constants/statusCodes.js";
 import Logger from "../infrastructure/utils/logger.js";
 
 class AuthController {
-  constructor(private _userUseCase: IUserUseCase) {}
+  constructor(private _userUseCase: IAuthUseCase) {}
 
   async register(req: Request<{}, {}, RegisterUserDto>, res: Response) {
     const { body } = req;

@@ -1,7 +1,8 @@
 export interface Address {
-  coord:[number]
+  coord: [number];
   district: string;
   city: string;
+  pinCode: number;
 }
 
 export interface User {
@@ -12,10 +13,8 @@ export interface User {
   avatar?: string;
   password: string;
   role: string;
-  isVolunteer:boolean;
+  isVolunteer: boolean;
   address?: Address;
   createdAt?: Date;
   updatedAt?: Date;
 }
-
-

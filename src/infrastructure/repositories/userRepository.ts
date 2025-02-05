@@ -27,6 +27,30 @@ class UserRepository implements IUserRepository {
       return null;
     }
   }
+  async findUserById(id: string): Promise<User | null> {
+    try {
+      return await UserModel.findById(id).lean();
+    } catch (error) {
+      Logger.error(`Error finding user by id: ${id}: ${error}`);
+      return null;
+    }
+  }
+
+  async findUserByIdAndUpdate(
+    id: string,
+    updateData: Partial<User>
+  ): Promise<User | null> {
+    try {
+      return await UserModel.findByIdAndUpdate(
+        id,
+        { $set: updateData },
+        { new: true }
+      ).lean();
+    } catch (error) {
+      Logger.error(`Error updating user with id: ${id}: ${error}`);
+      return null;
+    }
+  }
 }
 
 export default UserRepository;

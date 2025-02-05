@@ -14,7 +14,7 @@ const userSchema = new Schema<UserDocument>(
       required: true,
       unique: true,
     },
-    avatar:{
+    avatar: {
       type: String,
       required: false,
     },
@@ -38,7 +38,7 @@ const userSchema = new Schema<UserDocument>(
     },
     address: {
       coord: {
-        type: [Number], // [<longitude>, <latitude>]
+        type: [Number],
         required: false,
       },
       district: {
@@ -47,6 +47,10 @@ const userSchema = new Schema<UserDocument>(
       },
       city: {
         type: String,
+        required: false,
+      },
+      pinCode: {
+        type: Number,
         required: false,
       },
     },

@@ -61,3 +61,17 @@ export const forgetPasswordDtoValidator = Joi.object({
     "string.min": "Phone must be at least 10 characters",
   }),
 });
+
+
+export const updateUserSchema = Joi.object({
+  name: Joi.string().min(1).optional(), 
+  email: Joi.string().email().optional(), 
+  phone: Joi.string().min(1).optional(),
+  address: Joi.object({
+    coord: Joi.array().items(Joi.number()).min(1).optional(),
+    city: Joi.string().min(1).optional(),
+    district: Joi.string().min(1).optional(),
+    pinCode: Joi.number().optional(),
+  }).optional(),
+  isVolunteer: Joi.boolean().optional() 
+});

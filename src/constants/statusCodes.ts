@@ -10,6 +10,7 @@ export enum STATUS_CODES {
 
 export enum USER_MESSAGES {
   USER_NOT_FOUND = 'Account does not exist',
+  USER_UPDATE_FAILED = 'Failed to update account',
   USER_ALREADY_EXISTS = 'User already exists',
   INVALID_CREDENTIALS = 'Invalid credentials',
   INVALID_EMAIL = 'Invalid email',

@@ -1,3 +1,5 @@
+import { ParamsDictionary } from "express-serve-static-core";
+
 export interface RegisterUserDto {
   name: string;
   email: string;
@@ -8,6 +10,7 @@ export interface RegisterUserDto {
     coord: [number];
     city: string;
     district: string;
+    pinCode:number;
   };
   role: string;
   isVolunteer: boolean;
@@ -26,3 +29,4 @@ export interface ForgetPasswordDto{
 export interface VerifyForgetPasswordDto{
   otp: string;
 }
+
