@@ -1,9 +1,9 @@
 import express, { Express } from "express";
-import Logger from "../../utils/logger.js";
+import Logger from "../utils/logger.js";
 import dotenv from "dotenv";
-import connectToDataBase from "../db/mongo.js";
-import authRoute from "../../routes/authRoute.js";
-import userRoute from "../../routes/userRoute.js";
+import connectToDataBase from "./mongo.js";
+import authRoute from "../routes/authRoute.js";
+import userRoute from "../routes/userRoute.js";
 import morgan from "morgan";
 import cookieParser from "cookie-parser";
 dotenv.config();

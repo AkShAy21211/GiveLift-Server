@@ -1,7 +1,7 @@
 import express from "express";
 import UserRepository from "../repositories/userRepository.js";
 import { Request, Response } from "express-serve-static-core";
-import UserUseCase from "../../usecases/userUseCase.js";
+import UserUseCase from "../../domain/usecases/userUseCase.js";
 import UserController from "../../controllers/userController.js";
 
 

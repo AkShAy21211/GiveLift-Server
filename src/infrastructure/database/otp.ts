@@ -1,5 +1,5 @@
 import { model, Schema } from "mongoose";
-import Otp from "../../entities/Otp.js";
+import Otp from "../../domain/entities/Otp.js";
 
 export interface OtpDocument extends Otp, Document {}
 

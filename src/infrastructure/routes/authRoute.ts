@@ -1,12 +1,12 @@
 import express from "express";
 import UserRepository from "../repositories/userRepository.js";
-import AuthrUseCase from "../../usecases/authUseCase.js";
+import AuthUseCase from "../../domain/usecases/authUseCase.js";
 import AuthController from "../../controllers/authController.js";
 import BCrypt from "../utils/bcrypt.js";
 import { Request, Response } from "express-serve-static-core";
 import JsonWebToken from "../utils/jwt.js";
 import OtpRepository from "../repositories/otpRepository.js";
-import Twilio from "../../interfaces/services/twilioService.js";
+import Twilio from "../../infrastructure/services/twilioService.js";
 
 const router = express.Router();
 
@@ -18,7 +18,7 @@ const otpManager = new Twilio();
 // �� Set up dependencies in the auth controller
 const userRepository = new UserRepository();
 
-const authUseCase = new AuthrUseCase(
+const authUseCase = new AuthUseCase(
   userRepository,
   bcrypt,
   jwt,

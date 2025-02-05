@@ -1,16 +1,14 @@
-import { User } from "../entities/User.js";
-import BCrypt from "../infrastructure/utils/bcrypt.js";
-import IUserRepository from "../interfaces/repositories/userRepository.interface.js";
-import IAuthUseCase from "../interfaces/use-cases/authUseCase.interface.js";
-import AppError from "../infrastructure/utils/AppError.js";
-import { STATUS_CODES, USER_MESSAGES } from "../constants/statusCodes.js";
-import Logger from "../infrastructure/utils/logger.js";
-import JsonWebToken from "../infrastructure/utils/jwt.js";
-import IOtpRepository from "../interfaces/repositories/otpRepository.interfae.js";
-import Otp from "../entities/Otp.js";
-import Twilio from "../interfaces/services/twilioService.js";
+import { User } from "../entities/User.js"; 
+import BCrypt from "../../infrastructure/utils/bcrypt.js";
+import IUserRepository from "../interfaces/userRepository.interface.js";
+import AppError from "../../infrastructure/utils/AppError.js";
+import JsonWebToken from "../../infrastructure/utils/jwt.js";
+import IOtpRepository from "../interfaces/otpRepository.interfae.js";
+import Twilio from "../../infrastructure/services/twilioService.js";
+import STATUS_CODES from '../../constants/statusCodes.js';
+import STATUS_MESSAGES from "../../constants/statusMessages.js";
 
-class AuthUseCase implements IAuthUseCase {
+class AuthUseCase   {
   constructor(
     private _userRepository: IUserRepository,
     private _bcrypt: BCrypt,
@@ -26,7 +24,7 @@ class AuthUseCase implements IAuthUseCase {
       );
       if (existingUser) {
         throw new AppError(
-          USER_MESSAGES.USER_ALREADY_EXISTS,
+          STATUS_MESSAGES.USER_ALREADY_EXISTS,
           STATUS_CODES.CONFLICT
         );
       }
@@ -37,7 +35,7 @@ class AuthUseCase implements IAuthUseCase {
 
       if (!savedUser) {
         throw new AppError(
-          USER_MESSAGES.INTERNAL_SERVER_ERROR,
+          STATUS_MESSAGES.INTERNAL_SERVER_ERROR,
           STATUS_CODES.INTERNAL_SERVER_ERROR
         );
       }
@@ -68,7 +66,7 @@ class AuthUseCase implements IAuthUseCase {
 
       if (!existingUser) {
         throw new AppError(
-          USER_MESSAGES.USER_NOT_FOUND,
+          STATUS_MESSAGES.USER_NOT_FOUND,
           STATUS_CODES.NOT_FOUND
         );
       }
@@ -79,7 +77,7 @@ class AuthUseCase implements IAuthUseCase {
 
       if (!isValidPassword) {
         throw new AppError(
-          USER_MESSAGES.INVALID_CREDENTIALS,
+          STATUS_MESSAGES.INVALID_CREDENTIALS,
           STATUS_CODES.UNAUTHORIZED
         );
       }
@@ -109,7 +107,7 @@ class AuthUseCase implements IAuthUseCase {
 
       if (!user) {
         throw new AppError(
-          USER_MESSAGES.USER_NOT_FOUND,
+          STATUS_MESSAGES.USER_NOT_FOUND,
           STATUS_CODES.NOT_FOUND
         );
       }
@@ -129,7 +127,7 @@ class AuthUseCase implements IAuthUseCase {
 
       if (!existingUser) {
         throw new AppError(
-          USER_MESSAGES.USER_NOT_FOUND,
+          STATUS_MESSAGES.USER_NOT_FOUND,
           STATUS_CODES.NOT_FOUND
         );
       }
@@ -145,14 +143,14 @@ class AuthUseCase implements IAuthUseCase {
 
       if (!otp) {
         throw new AppError(
-          USER_MESSAGES.OTP_CREATETION_FAILED,
+          STATUS_MESSAGES.OTP_CREATETION_FAILED,
           STATUS_CODES.INTERNAL_SERVER_ERROR
         );
       }
       const send = await this._twilio.sendOtp(phone, data.otp);
       if (!send) {
         throw new AppError(
-          USER_MESSAGES.OTP_SEND_FAILED,
+          STATUS_MESSAGES.OTP_SEND_FAILED,
           STATUS_CODES.INTERNAL_SERVER_ERROR
         );
       }
@@ -168,14 +166,14 @@ class AuthUseCase implements IAuthUseCase {
 
       if (!otpEntity) {
         throw new AppError(
-          USER_MESSAGES.OTP_NOTFOUND,
+          STATUS_MESSAGES.OTP_NOTFOUND,
           STATUS_CODES.BAD_REQUEST
         );
       }
       const isValidOtp = await this._twilio.compareOTP(otpEntity.otp, otp);
 
       if (!isValidOtp) {
-        throw new AppError(USER_MESSAGES.OTP_EXPIRED, STATUS_CODES.BAD_REQUEST);
+        throw new AppError(STATUS_MESSAGES.OTP_EXPIRED, STATUS_CODES.BAD_REQUEST);
       }
 
       await this._otpRepository.deleteOtp(otpEntity.otp);

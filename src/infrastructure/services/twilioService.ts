@@ -1,10 +1,10 @@
 import bcrypt from "bcryptjs";
 import twilio from "twilio";
 import ENVS from "../../infrastructure/config/envConfig.js";
-import { USER_MESSAGES } from "../../constants/statusCodes.js";
 import Logger from "../../infrastructure/utils/logger.js";
+import ITwilio from "../interfaces/twilioService.interface.js";
 
-class Twilio {
+class Twilio  implements ITwilio{
   private client: twilio.Twilio;
   private senderPhone: string;
 

@@ -1,5 +1,5 @@
-import Otp from "../../entities/Otp.js";
-import IOtpRepository from "../../interfaces/repositories/otpRepository.interfae.js";
+import Otp from "../../domain/entities/Otp.js";
+import IOtpRepository from "../../domain/interfaces/otpRepository.interfae.js";
 import OtpModel from "../database/otp.js";
 import AppError from "../utils/AppError.js";
 import Logger from "../utils/logger.js";

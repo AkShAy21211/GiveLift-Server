@@ -1,5 +1,5 @@
-import { User } from "../../entities/User.js";
-import IUserRepository from "../../interfaces/repositories/userRepository.interface.js";
+import { User } from "../../domain/entities/User.js";
+import IUserRepository from "../../domain/interfaces/userRepository.interface.js";
 import UserModel from "../database/user.js";
 import AppError from "../utils/AppError.js";
 import Logger from "../utils/logger.js";

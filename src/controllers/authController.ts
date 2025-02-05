@@ -1,21 +1,21 @@
 import { Request, Response } from "express-serve-static-core";
-import IAuthUseCase from "../interfaces/use-cases/authUseCase.interface.js";
 import {
   ForgetPasswordDto,
   LoginUserDto,
   RegisterUserDto,
   VerifyForgetPasswordDto,
-} from "../interfaces/dtos/userDtos.js";
+} from "../dtos/userDtos.js";
 import {
   forgetPasswordDtoValidator,
   userCreateValidator,
   userLoginValidator,
 } from "../infrastructure/utils/validation.js";
-import { STATUS_CODES, USER_MESSAGES } from "../constants/statusCodes.js";
 import Logger from "../infrastructure/utils/logger.js";
-
+import AuthUseCase from "../domain/usecases/authUseCase.js";
+import STATUS_CODES from "../constants/statusCodes.js";
+import STATUS_MESSAGES from "../constants/statusMessages.js";
 class AuthController {
-  constructor(private _userUseCase: IAuthUseCase) {}
+  constructor(private _userUseCase: AuthUseCase) {}
 
   async register(req: Request<{}, {}, RegisterUserDto>, res: Response) {
     const { body } = req;
@@ -32,7 +32,7 @@ class AuthController {
       // Create and save user in the database
       const newUser = await this._userUseCase.createAndSaveUser(body);
       return res.status(STATUS_CODES.OK).json({
-        message: USER_MESSAGES.REGISTRATION_SUCCESS,
+        message: STATUS_MESSAGES.REGISTRATION_SUCCESS,
         token: newUser.token,
       });
     } catch (error: any) {
@@ -40,7 +40,7 @@ class AuthController {
       return res
         .status(error.statusCode || STATUS_CODES.INTERNAL_SERVER_ERROR)
         .json({
-          message: error.message || USER_MESSAGES.INTERNAL_SERVER_ERROR,
+          message: error.message || STATUS_MESSAGES.INTERNAL_SERVER_ERROR,
         });
     }
   }
@@ -63,7 +63,7 @@ class AuthController {
       );
 
       return res.status(STATUS_CODES.OK).json({
-        message: USER_MESSAGES.LOGIN_SUCCESS,
+        message: STATUS_MESSAGES.LOGIN_SUCCESS,
         token: existingUser.token,
       });
     } catch (error: any) {
@@ -71,7 +71,7 @@ class AuthController {
       return res
         .status(error.statusCode || STATUS_CODES.INTERNAL_SERVER_ERROR)
         .json({
-          message: error.message || USER_MESSAGES.INTERNAL_SERVER_ERROR,
+          message: error.message || STATUS_MESSAGES.INTERNAL_SERVER_ERROR,
         });
     }
   }
@@ -100,14 +100,14 @@ class AuthController {
       });
 
       return res.status(STATUS_CODES.OK).json({
-        message: USER_MESSAGES.OTP_SEND,
+        message: STATUS_MESSAGES.OTP_SEND,
       });
     } catch (error: any) {
       Logger.error(error);
       return res
         .status(error.statusCode || STATUS_CODES.INTERNAL_SERVER_ERROR)
         .json({
-          message: error.message || USER_MESSAGES.INTERNAL_SERVER_ERROR,
+          message: error.message || STATUS_MESSAGES.INTERNAL_SERVER_ERROR,
         });
     }
   }
@@ -122,14 +122,14 @@ class AuthController {
 
       await this._userUseCase.verifyOtpForForgetPassword(email, body.otp);
       return res.status(STATUS_CODES.OK).json({
-        message: USER_MESSAGES.OTP_VERIFICATION_SUCCESS,
+        message: STATUS_MESSAGES.OTP_VERIFICATION_SUCCESS,
       });
     } catch (error: any) {
       Logger.error(error);
       return res
         .status(error.statusCode || STATUS_CODES.INTERNAL_SERVER_ERROR)
         .json({
-          message: error.message || USER_MESSAGES.INTERNAL_SERVER_ERROR,
+          message: error.message || STATUS_MESSAGES.INTERNAL_SERVER_ERROR,
         });
     }
   }

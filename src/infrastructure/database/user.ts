@@ -1,5 +1,5 @@
 import mongoose, { Schema } from "mongoose";
-import { User } from "../../entities/User.js";
+import { User } from "../../domain/entities/User.js";
 
 interface UserDocument extends User, Document {}
 

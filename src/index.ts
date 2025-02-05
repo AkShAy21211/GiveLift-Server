@@ -1,4 +1,4 @@
-import ExpressApp from "./infrastructure/config/app/app.js";
+import ExpressApp from "./infrastructure/config/app.js";
 import Logger from "./infrastructure/utils/logger.js";
 
 const start = () => {

@@ -1,11 +1,10 @@
-import { STATUS_CODES, USER_MESSAGES } from "../constants/statusCodes.js";
-import { User } from "../entities/User.js";
-import AppError from "../infrastructure/utils/AppError.js";
-import Logger from "../infrastructure/utils/logger.js";
-import IUserRepository from "../interfaces/repositories/userRepository.interface.js";
-import IUserUseCase from "../interfaces/use-cases/userUseCase.interface.js";
+import { User } from "../../domain/entities/User.js";
+import AppError from "../../infrastructure/utils/AppError.js";
+import IUserRepository from "../interfaces/userRepository.interface.js";
+import STATUS_CODES from '../../constants/statusCodes.js';
+import STATUS_MESSAGES from "../../constants/statusMessages.js";
 
-class UserUseCase implements IUserUseCase {
+class UserUseCase   {
   constructor(private _userRepository: IUserRepository) {}
   async getUserById(id: string): Promise<User | null> {
     try {
@@ -13,14 +12,14 @@ class UserUseCase implements IUserUseCase {
 
       if (!user) {
         throw new AppError(
-          USER_MESSAGES.USER_NOT_FOUND,
+          STATUS_MESSAGES.USER_NOT_FOUND,
           STATUS_CODES.NOT_FOUND
         );
       }
       return user;
     } catch (error) {
       throw new AppError(
-        USER_MESSAGES.INTERNAL_SERVER_ERROR,
+        STATUS_MESSAGES.INTERNAL_SERVER_ERROR,
         STATUS_CODES.INTERNAL_SERVER_ERROR
       );
     }
@@ -33,7 +32,7 @@ class UserUseCase implements IUserUseCase {
       const user = await this._userRepository.findUserById(id);
       if (!user) {
         throw new AppError(
-          USER_MESSAGES.USER_NOT_FOUND,
+          STATUS_MESSAGES.USER_NOT_FOUND,
           STATUS_CODES.NOT_FOUND
         );
       }
@@ -52,14 +51,14 @@ class UserUseCase implements IUserUseCase {
       );
       if (!updatedUser) {
         throw new AppError(
-          USER_MESSAGES.USER_UPDATE_FAILED,
+          STATUS_MESSAGES.USER_UPDATE_FAILED,
           STATUS_CODES.INTERNAL_SERVER_ERROR
         );
       }
       return updatedUser;
     } catch (error) {
       throw new AppError(
-        USER_MESSAGES.INTERNAL_SERVER_ERROR,
+        STATUS_MESSAGES.INTERNAL_SERVER_ERROR,
         STATUS_CODES.INTERNAL_SERVER_ERROR
       );
     }
