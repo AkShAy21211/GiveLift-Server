@@ -33,9 +33,9 @@ class UserController {
     } catch (error: any) {
       Logger.error(error);
       return res
-        .status(error.statusCode||STATUS_CODES.INTERNAL_SERVER_ERROR)
+        .status(error.statusCode || STATUS_CODES.INTERNAL_SERVER_ERROR)
         .json({
-          message:error.message||USER_MESSAGES.INTERNAL_SERVER_ERROR,
+          message: error.message || USER_MESSAGES.INTERNAL_SERVER_ERROR,
         });
     }
   }
@@ -43,7 +43,6 @@ class UserController {
   async login(req: Request<{}, {}, LoginUserDto>, res: Response) {
     const { body } = req;
 
-    
     // Validate user input using Joi
     const { error } = userLoginValidator.validate(body);
     if (error) {
@@ -70,6 +69,10 @@ class UserController {
           message: error.message || USER_MESSAGES.INTERNAL_SERVER_ERROR,
         });
     }
+  }
+
+  forgetPassword(req:Request,res:Response){
+    
   }
 }
 

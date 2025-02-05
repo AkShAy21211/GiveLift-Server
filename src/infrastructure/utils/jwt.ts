@@ -1,6 +1,7 @@
 import jwt from "jsonwebtoken";
 import ENVS from "../config/envConfig.js";
 import Logger from "./logger.js";
+import AppError from "./AppError.js";
 
 export interface JwtPayload {
   _id: string;
@@ -20,7 +21,8 @@ class JsonWebToken {
       return token;
     } catch (error: any) {
       Logger.error(error.message);
-      throw new Error("Failed to generate token");
+      throw new AppError("Failed to generate token",500);
+      
     }
   }
 
@@ -29,7 +31,7 @@ class JsonWebToken {
       return jwt.verify(token, this._secret) as JwtPayload;
     } catch (error: any) {
       Logger.error(error.message);
-      throw new Error("Invalid token");
+      throw new AppError("Invalid token",500);
     }
   }
 }

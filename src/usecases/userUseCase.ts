@@ -45,16 +45,14 @@ class UserUseCase implements IUserUseCase {
     email: string,
     password: string
   ): Promise<{ user: User; token: string }> {
+    console.log(email, password);
 
-    console.log(email,password);
-    
     try {
       const existingUser = await this._userRepository.findUserByEmailOrPhone(
         email,
         ""
       );
 
-      
       if (!existingUser) {
         throw new AppError(
           USER_MESSAGES.USER_NOT_FOUND,
