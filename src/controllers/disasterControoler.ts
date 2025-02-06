@@ -8,7 +8,7 @@ import STATUS_MESSAGES from "../constants/statusMessages.js";
 class DisasterController {
   constructor(private _disasterUseCase: DisasterUseCase) {}
 
-  async createNewDisaster(
+  async createNewDisasterReport(
     req: Request<{}, {}, DisasterReportDto>,
     res: Response
   ): Promise<void> {

@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 import connectToDataBase from "./mongo.js";
 import authRoute from "../routes/authRoute.js";
 import userRoute from "../routes/userRoute.js";
+import disasterRoute from "../routes/disasterRoute.js";
 import morgan from "morgan";
 import cookieParser from "cookie-parser";
 dotenv.config();
@@ -17,7 +18,8 @@ class ExpressApp {
     this._app.use(express.urlencoded({ extended: true }));
     this.app.use(morgan("tiny"));
     this.app.use("/api/auth", authRoute);
-    this.app.use("/api/user",userRoute)
+    this.app.use("/api/user",userRoute);
+    this.app.use("/api/disaster",disasterRoute);
   }
 
   public get app(): Express {

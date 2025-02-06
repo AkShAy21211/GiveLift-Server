@@ -21,3 +21,5 @@ class DisasterRepository implements IDisasterRepository {
     throw new Error("Method not implemented.");
   }
 }
+
+export default DisasterRepository;
