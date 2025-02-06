@@ -14,6 +14,7 @@ import Logger from "../infrastructure/utils/logger.js";
 import AuthUseCase from "../domain/usecases/authUseCase.js";
 import STATUS_CODES from "../constants/statusCodes.js";
 import STATUS_MESSAGES from "../constants/statusMessages.js";
+import ENVS from "../infrastructure/config/envConfig.js";
 class AuthController {
   constructor(private _userUseCase: AuthUseCase) {}
 
@@ -30,10 +31,22 @@ class AuthController {
 
     try {
       // Create and save user in the database
-      const newUser = await this._userUseCase.createAndSaveUser(body);
+      const savedData = await this._userUseCase.createAndSaveUser(body);
+
+      const currentUser = {
+        _id: savedData.user._id,
+        token: savedData.token,
+      };
+      res.cookie("currentUser", JSON.stringify(currentUser), {
+        // 5minutes expiry
+        expires: new Date(Date.now() + 1000 * 60 * 60 * 24),
+        httpOnly: true,
+        secure: ENVS.NODE_ENV === "production",
+        sameSite: "lax",
+      });
       return res.status(STATUS_CODES.OK).json({
         message: STATUS_MESSAGES.REGISTRATION_SUCCESS,
-        token: newUser.token,
+        token: savedData.token,
       });
     } catch (error: any) {
       Logger.error(error);
@@ -57,14 +70,23 @@ class AuthController {
     }
 
     try {
-      const existingUser = await this._userUseCase.authenticateUser(
+      const savedData = await this._userUseCase.authenticateUser(
         body.email,
         body.password
       );
-
+      const currentUser = {
+        _id: savedData.user._id,
+        token: savedData.token,
+      };
+      res.cookie("currentUser", JSON.stringify(currentUser), {
+        expires: new Date(Date.now() + 1000 * 60 * 60 * 24),
+        httpOnly: true,
+        secure: ENVS.NODE_ENV === "production",
+        sameSite: "lax",
+      });
       return res.status(STATUS_CODES.OK).json({
         message: STATUS_MESSAGES.LOGIN_SUCCESS,
-        token: existingUser.token,
+        token: savedData.token,
       });
     } catch (error: any) {
       Logger.error(error);
@@ -89,8 +111,6 @@ class AuthController {
     try {
       // Send password reset otp to the user's phone number
       const user = await this._userUseCase.sendOtpForForgetPassword(body.phone);
-
-      console.log(user);
 
       res.cookie("email", user.email, {
         // 5minutes expiry
@@ -118,7 +138,7 @@ class AuthController {
   ) {
     try {
       const { body } = req;
-      const email:string = req.cookies.email;
+      const email: string = req.cookies.email;
 
       await this._userUseCase.verifyOtpForForgetPassword(email, body.otp);
       return res.status(STATUS_CODES.OK).json({
