@@ -13,20 +13,40 @@ class DisasterController {
     res: Response
   ): Promise<void> {
     const { body } = req;
-
+    const cookie = req.cookies.currentUser;
+    const currentUser: { role: string; _id: string; token: string } = cookie
+      ? JSON.parse(cookie)
+      : null;
     const { error } = disasterReportValidationSchema.validate(body);
 
+    if (!currentUser) {
+      res.status(STATUS_CODES.UNAUTHORIZED).json({
+        message: STATUS_MESSAGES.ACCESS_DENIED,
+      });
+    }
+
     if (error) {
-       res.status(STATUS_CODES.BAD_REQUEST).json({
-        message: STATUS_MESSAGES.USER_NOT_FOUND,
+      res.status(STATUS_CODES.BAD_REQUEST).json({
+        message: error.details[0].message,
       });
       return;
     }
     try {
-      const newDisaster = await this._disasterUseCase.createAndSaveDisaster(body);
-      res.status(201).send();
-    } catch (error:any) {
+      await this._disasterUseCase.createAndSaveDisaster(
+        cookie._id,
+        cookie.role,
+        body
+      );
+
+      res.status(STATUS_CODES.CREATED).json({
+        message: STATUS_MESSAGES.DISASTER_REPORTED,
+      });
+      return;
+    } catch (error: any) {
       res.status(500).send(error.message);
     }
   }
 }
+
+
+export default DisasterController;

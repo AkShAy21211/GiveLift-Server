@@ -9,7 +9,8 @@ interface DisasterReport {
     city: string;
     pinCode: number;
   };
-  reportedBy: any;
+  reportedBy?: string;
+  byAdmin?:boolean;
   severity: string;
   status: boolean;
   media: string[];

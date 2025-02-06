@@ -16,7 +16,7 @@ import STATUS_CODES from "../constants/statusCodes.js";
 import STATUS_MESSAGES from "../constants/statusMessages.js";
 import ENVS from "../infrastructure/config/envConfig.js";
 class AuthController {
-  constructor(private _userUseCase: AuthUseCase) {}
+  constructor(private _userUseCase: AuthUseCase) { }
 
   async register(
     req: Request<{}, {}, RegisterUserDto>,
@@ -39,6 +39,7 @@ class AuthController {
 
       const currentUser = {
         _id: savedData.user._id,
+        role: savedData.user.role,
         token: savedData.token,
       };
       res.cookie("currentUser", JSON.stringify(currentUser), {
@@ -84,6 +85,7 @@ class AuthController {
       );
       const currentUser = {
         _id: savedData.user._id,
+        role: savedData.user.role,
         token: savedData.token,
       };
       res.cookie("currentUser", JSON.stringify(currentUser), {

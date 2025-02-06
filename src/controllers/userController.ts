@@ -31,17 +31,11 @@ class UserController {
     }
 
     try {
-      const updatedUser = await this._userUseCase.getUserByIdAndUpdate(
-        userId,
-        body
-      );
-      if (!updatedUser) {
-        res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).json({
-          message: STATUS_MESSAGES.USER_UPDATE_FAILED,
-        });
-        return;
-      }
-      res.status(STATUS_CODES.OK).json(updatedUser);
+      await this._userUseCase.getUserByIdAndUpdate(userId, body);
+
+      res.status(STATUS_CODES.OK).json({
+        message: STATUS_MESSAGES.USER_UPDATE_SUCCESS,
+      });
     } catch (error: any) {
       Logger.error(error);
       res.status(error.statusCode || STATUS_CODES.INTERNAL_SERVER_ERROR).json({
