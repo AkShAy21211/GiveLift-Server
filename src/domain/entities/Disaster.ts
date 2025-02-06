@@ -10,12 +10,6 @@ interface DisasterReport {
     pinCode: number;
   };
   reportedBy: any;
-  byAdmin: boolean;
-  resourcesNeeded: Array<{
-    resourceType: string;
-    quantity: number;
-    cost: number;
-  }>;
   severity: string;
   status: boolean;
   media: string[];
