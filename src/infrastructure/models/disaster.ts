@@ -1,37 +1,41 @@
-import { Schema, model } from "mongoose";
+import { Schema, model, Document } from "mongoose";
+import DisasterReport from "../../domain/entities/Disaster.js";
 
 
-// Create the Mongoose schema corresponding to the DisasterReport interface
-const disasterReportSchema = new Schema({
-  title: { type: String, required: true },
-  description: { type: String, required: true },
-  type: { type: String, required: true },
-  location: {
-    coord: { type: [Number], required: false },  
-    district: { type: String, required: false },
-    city: { type: String, required: false },
-    pinCode: { type: Number, required: false },
-  },
-  reportedBy: { type: Schema.Types.ObjectId, ref: 'User', required: true }, 
-  byAdmin: { type: Boolean, required: true },
-  resourcesNeeded: [
-    {
-      resourceType: { type: String, required: true },
-      quantity: { type: Number, required: true },
-      cost: { type: Number, required: true },
+interface DisasterReportDocument extends Document, DisasterReport {}
+
+const disasterReportSchema = new Schema<DisasterReportDocument>(
+  {
+    title: { type: String, required: true },
+    description: { type: String, required: true },
+    type: { type: String, required: true },
+    location: {
+      type: { type: String, enum: ['Point'], required: true },
+      coordinates: { type: [Number], required: true }, 
+      district: { type: String, required: true },
+      city: { type: String, required: true },
+      pinCode: { type: Number, required: true },
     },
-  ],
-  severity: { type: String, required: true },
-  status: { type: Boolean, required: true },
-  media: { type: [String], required: true }, 
-}, { timestamps: true }); 
+    reportedBy: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+    byAdmin: { type: Boolean, required: true },
+    resourcesNeeded: [
+      {
+        resourceType: { type: String, required: true },
+        quantity: { type: Number, required: true },
+        cost: { type: Number, required: true },
+      },
+    ],
+    severity: { type: String, required: true },
+    status: { type: Boolean, required: true },
+    media: { type: [String], required: true },
+  },
+  { timestamps: true }
+);
 
-//create index
+// Ensure location has a 2dsphere index
 disasterReportSchema.index({ location: '2dsphere' });
 
-
-
-// Create the Mongoose model
-const DisasterReportModel = model('DisasterReport', disasterReportSchema);
+// Create and export the model
+const DisasterReportModel = model<DisasterReportDocument>('DisasterReport', disasterReportSchema);
 
 export default DisasterReportModel;

@@ -17,7 +17,9 @@ export enum STATUS_MESSAGES {
   OTP_EXPIRED = 'Invaalid OTP or expired',
   OTP_VERIFICATION_SUCCESS = 'OTP verification succeeded',
   OTP_SEND_FAILED = 'OTP send failed',
-  OTP_SEND = 'OTP has been send to your mobile number'
+  OTP_SEND = 'OTP has been send to your mobile number',
+  DISASTER_REPORTED = "Disaster reported successfully",
+  DISASTER_REPORT_FAILED = "Disaster report creation failed",
 }
 
 export default STATUS_MESSAGES

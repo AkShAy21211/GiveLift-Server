@@ -3,23 +3,11 @@ interface DisasterReport {
   description: string;
   type: string;
   location: {
-    type: { type: String, enum: ['Point'], required: true },
-    coordinates: {
-      type: [Number];
-      required: false;
-    };
-    district: {
-      type: String;
-      required: false;
-    };
-    city: {
-      type: String;
-      required: false;
-    };
-    pinCode: {
-      type: Number;
-      required: false;
-    };
+    type: 'Point'; 
+    coordinates: number[];
+    district: string;
+    city: string;
+    pinCode: number;
   };
   reportedBy: any;
   byAdmin: boolean;
@@ -31,8 +19,8 @@ interface DisasterReport {
   severity: string;
   status: boolean;
   media: string[];
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt?: Date;
+  updatedAt?: Date;
 }
 
 export default DisasterReport;

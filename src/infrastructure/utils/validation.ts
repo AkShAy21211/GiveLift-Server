@@ -62,10 +62,9 @@ export const forgetPasswordDtoValidator = Joi.object({
   }),
 });
 
-
 export const updateUserSchema = Joi.object({
-  name: Joi.string().min(1).optional(), 
-  email: Joi.string().email().optional(), 
+  name: Joi.string().min(1).optional(),
+  email: Joi.string().email().optional(),
   phone: Joi.string().min(1).optional(),
   address: Joi.object({
     coord: Joi.array().items(Joi.number()).min(1).optional(),
@@ -73,5 +72,97 @@ export const updateUserSchema = Joi.object({
     district: Joi.string().min(1).optional(),
     pinCode: Joi.number().optional(),
   }).optional(),
-  isVolunteer: Joi.boolean().optional() 
+  isVolunteer: Joi.boolean().optional(),
+});
+
+export const disasterReportValidationSchema = Joi.object({
+  title: Joi.string().required().messages({
+    "string.base": "Title must be a string.",
+    "string.empty": "Title is required.",
+  }),
+
+  description: Joi.string().required().messages({
+    "string.base": "Description must be a string.",
+    "string.empty": "Description is required.",
+  }),
+
+  type: Joi.string().required().messages({
+    "string.base": "Type must be a string.",
+    "string.empty": "Type is required.",
+  }),
+
+  location: Joi.object({
+    type: Joi.string().valid("Point").required().messages({
+      "any.only": "Location type must be 'Point'.",
+      "string.base": "Location type must be a string.",
+      "string.empty": "Location type is required.",
+    }),
+
+    coordinates: Joi.array()
+      .items(
+        Joi.number().messages({
+          "number.base": "Each coordinate must be a number.",
+        })
+      )
+      .length(2)
+      .required()
+      .messages({
+        "array.base": "Coordinates must be an array of numbers.",
+        "array.length":
+          "Coordinates must contain exactly [longitude, latitude].",
+        "any.required": "Coordinates are required.",
+      }),
+
+    district: Joi.string().required().messages({
+      "string.base": "District must be a string.",
+      "string.empty": "District is required.",
+    }),
+
+    city: Joi.string().required().messages({
+      "string.base": "City must be a string.",
+      "string.empty": "City is required.",
+    }),
+
+    pinCode: Joi.number().integer().required().messages({
+      "number.base": "Pin Code must be a number.",
+      "number.integer": "Pin Code must be an integer.",
+      "any.required": "Pin Code is required.",
+    }),
+  })
+    .required()
+    .messages({
+      "object.base": "Location must be an object.",
+      "any.required": "Location is required.",
+    }),
+
+  reportedBy: Joi.string().hex().length(24).required().messages({
+    "string.base": "ReportedBy must be a string.",
+    "string.length": "ReportedBy must be exactly 24 characters long.",
+    "any.required": "ReportedBy is required.",
+  }),
+
+  severity: Joi.string()
+    .valid("low", "medium", "high", "critical")
+    .required()
+    .messages({
+      "any.only":
+        "Severity must be one of 'low', 'medium', 'high', or 'critical'.",
+      "string.base": "Severity must be a string.",
+      "any.required": "Severity is required.",
+    }),
+
+  status: Joi.boolean().required().messages({
+    "boolean.base": "Status must be a boolean value.",
+    "any.required": "Status is required.",
+  }),
+
+  media: Joi.array()
+    .items(
+      Joi.string()
+        .uri()
+        .messages({ "string.uri": "Each media must be a valid URL." })
+    )
+    .messages({
+      "array.base": "Media must be an array of valid URLs.",
+    }),
 });
