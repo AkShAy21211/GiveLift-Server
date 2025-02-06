@@ -18,15 +18,19 @@ import ENVS from "../infrastructure/config/envConfig.js";
 class AuthController {
   constructor(private _userUseCase: AuthUseCase) {}
 
-  async register(req: Request<{}, {}, RegisterUserDto>, res: Response) {
+  async register(
+    req: Request<{}, {}, RegisterUserDto>,
+    res: Response
+  ): Promise<void> {
     const { body } = req;
 
     // Validate user input using Joi
     const { error } = userCreateValidator.validate(body);
     if (error) {
-      return res.status(STATUS_CODES.BAD_REQUEST).json({
+      res.status(STATUS_CODES.BAD_REQUEST).json({
         message: error.details[0].message,
       });
+      return;
     }
 
     try {
@@ -38,35 +42,39 @@ class AuthController {
         token: savedData.token,
       };
       res.cookie("currentUser", JSON.stringify(currentUser), {
-        // 5minutes expiry
         expires: new Date(Date.now() + 1000 * 60 * 60 * 24),
         httpOnly: true,
         secure: ENVS.NODE_ENV === "production",
         sameSite: "lax",
       });
-      return res.status(STATUS_CODES.OK).json({
+
+      res.status(STATUS_CODES.OK).json({
         message: STATUS_MESSAGES.REGISTRATION_SUCCESS,
         token: savedData.token,
       });
+      return;
     } catch (error: any) {
       Logger.error(error);
-      return res
-        .status(error.statusCode || STATUS_CODES.INTERNAL_SERVER_ERROR)
-        .json({
-          message: error.message || STATUS_MESSAGES.INTERNAL_SERVER_ERROR,
-        });
+      res.status(error.statusCode || STATUS_CODES.INTERNAL_SERVER_ERROR).json({
+        message: error.message || STATUS_MESSAGES.INTERNAL_SERVER_ERROR,
+      });
+      return;
     }
   }
 
-  async login(req: Request<{}, {}, LoginUserDto>, res: Response) {
+  async login(
+    req: Request<{}, {}, LoginUserDto>,
+    res: Response
+  ): Promise<void> {
     const { body } = req;
 
     // Validate user input using Joi
     const { error } = userLoginValidator.validate(body);
     if (error) {
-      return res.status(STATUS_CODES.BAD_REQUEST).json({
+      res.status(STATUS_CODES.BAD_REQUEST).json({
         message: error.details[0].message,
       });
+      return;
     }
 
     try {
@@ -84,29 +92,34 @@ class AuthController {
         secure: ENVS.NODE_ENV === "production",
         sameSite: "lax",
       });
-      return res.status(STATUS_CODES.OK).json({
+
+      res.status(STATUS_CODES.OK).json({
         message: STATUS_MESSAGES.LOGIN_SUCCESS,
         token: savedData.token,
       });
+      return;
     } catch (error: any) {
       Logger.error(error);
-      return res
-        .status(error.statusCode || STATUS_CODES.INTERNAL_SERVER_ERROR)
-        .json({
-          message: error.message || STATUS_MESSAGES.INTERNAL_SERVER_ERROR,
-        });
+      res.status(error.statusCode || STATUS_CODES.INTERNAL_SERVER_ERROR).json({
+        message: error.message || STATUS_MESSAGES.INTERNAL_SERVER_ERROR,
+      });
+      return;
     }
   }
 
-  async forgetPassword(req: Request<{}, {}, ForgetPasswordDto>, res: Response) {
+  async forgetPassword(
+    req: Request<{}, {}, ForgetPasswordDto>,
+    res: Response
+  ): Promise<void> {
     const { body } = req;
 
     // Validate user input using Joi
     const { error } = forgetPasswordDtoValidator.validate(body);
     if (error) {
-      return res.status(STATUS_CODES.BAD_REQUEST).json({
+      res.status(STATUS_CODES.BAD_REQUEST).json({
         message: error.details[0].message,
       });
+      return;
     }
     try {
       // Send password reset otp to the user's phone number
@@ -119,38 +132,40 @@ class AuthController {
         secure: false,
       });
 
-      return res.status(STATUS_CODES.OK).json({
+      res.status(STATUS_CODES.OK).json({
         message: STATUS_MESSAGES.OTP_SEND,
       });
+      return;
     } catch (error: any) {
       Logger.error(error);
-      return res
-        .status(error.statusCode || STATUS_CODES.INTERNAL_SERVER_ERROR)
-        .json({
-          message: error.message || STATUS_MESSAGES.INTERNAL_SERVER_ERROR,
-        });
+      res.status(error.statusCode || STATUS_CODES.INTERNAL_SERVER_ERROR).json({
+        message: error.message || STATUS_MESSAGES.INTERNAL_SERVER_ERROR,
+      });
+      return;
     }
   }
 
   async verifyForgetPassword(
     req: Request<{}, {}, VerifyForgetPasswordDto>,
     res: Response
-  ) {
+  ): Promise<void> {
     try {
       const { body } = req;
       const email: string = req.cookies.email;
 
       await this._userUseCase.verifyOtpForForgetPassword(email, body.otp);
-      return res.status(STATUS_CODES.OK).json({
+
+      res.status(STATUS_CODES.OK).json({
         message: STATUS_MESSAGES.OTP_VERIFICATION_SUCCESS,
       });
+      return;
     } catch (error: any) {
       Logger.error(error);
-      return res
-        .status(error.statusCode || STATUS_CODES.INTERNAL_SERVER_ERROR)
-        .json({
-          message: error.message || STATUS_MESSAGES.INTERNAL_SERVER_ERROR,
-        });
+
+      res.status(error.statusCode || STATUS_CODES.INTERNAL_SERVER_ERROR).json({
+        message: error.message || STATUS_MESSAGES.INTERNAL_SERVER_ERROR,
+      });
+      return;
     }
   }
 }

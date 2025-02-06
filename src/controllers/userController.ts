@@ -12,20 +12,22 @@ class UserController {
   async updateUserProfile(
     req: Request<ParamsDictionary, {}, Partial<RegisterUserDto>>,
     res: Response
-  ) {
+  ): Promise<void> {
     const { userId } = req.params;
     const { body } = req;
     const { error } = updateUserSchema.validate(body);
 
     if (!userId) {
-      return res.status(STATUS_CODES.BAD_REQUEST).json({
+      res.status(STATUS_CODES.BAD_REQUEST).json({
         message: STATUS_MESSAGES.USER_NOT_FOUND,
       });
+      return;
     }
     if (error) {
-      return res.status(STATUS_CODES.BAD_REQUEST).json({
+      res.status(STATUS_CODES.BAD_REQUEST).json({
         message: error.details[0].message,
       });
+      return;
     }
 
     try {
@@ -34,18 +36,18 @@ class UserController {
         body
       );
       if (!updatedUser) {
-        return res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).json({
+        res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).json({
           message: STATUS_MESSAGES.USER_UPDATE_FAILED,
         });
+        return;
       }
       res.status(STATUS_CODES.OK).json(updatedUser);
     } catch (error: any) {
       Logger.error(error);
-      return res
-        .status(error.statusCode || STATUS_CODES.INTERNAL_SERVER_ERROR)
-        .json({
-          message: error.message || STATUS_MESSAGES.INTERNAL_SERVER_ERROR,
-        });
+      res.status(error.statusCode || STATUS_CODES.INTERNAL_SERVER_ERROR).json({
+        message: error.message || STATUS_MESSAGES.INTERNAL_SERVER_ERROR,
+      });
+      return;
     }
   }
 }
