@@ -4,6 +4,7 @@ import DisasterReportDto from "../dtos/disasterDto.js";
 import { disasterReportValidationSchema } from "../infrastructure/utils/validation.js";
 import STATUS_CODES from "../constants/statusCodes.js";
 import STATUS_MESSAGES from "../constants/statusMessages.js";
+import Logger from "../infrastructure/utils/logger.js";
 
 class DisasterController {
   constructor(private _disasterUseCase: DisasterUseCase) {}
@@ -23,6 +24,7 @@ class DisasterController {
       res.status(STATUS_CODES.UNAUTHORIZED).json({
         message: STATUS_MESSAGES.ACCESS_DENIED,
       });
+      return;
     }
 
     if (error) {
@@ -32,9 +34,12 @@ class DisasterController {
       return;
     }
     try {
+
+
+     
       await this._disasterUseCase.createAndSaveDisaster(
-        cookie._id,
-        cookie.role,
+        currentUser._id,
+        currentUser.role,
         body
       );
 
@@ -43,10 +48,14 @@ class DisasterController {
       });
       return;
     } catch (error: any) {
-      res.status(500).send(error.message);
+      Logger.error(error);
+
+      res.status(error.statusCode || STATUS_CODES.INTERNAL_SERVER_ERROR).json({
+        message: error.message || STATUS_MESSAGES.INTERNAL_SERVER_ERROR,
+      });
+      return;
     }
   }
 }
-
 
 export default DisasterController;

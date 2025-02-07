@@ -18,13 +18,6 @@ const disasterReportSchema = new Schema<DisasterReportDocument>(
     },
     reportedBy: { type: Schema.Types.ObjectId, ref: 'User', required: true },
     byAdmin: { type: Boolean, required: true },
-    // resourcesNeeded: [
-    //   {
-    //     resourceType: { type: String, required: true },
-    //     quantity: { type: Number, required: true },
-    //     cost: { type: Number, required: true },
-    //   },
-    // ],
     severity: { type: String, required: true },
     status: { type: Boolean, required: true },
     media: { type: [String], required: true },

@@ -7,17 +7,16 @@ import DisasterController from "../../controllers/disasterControoler.js";
 const router = express.Router();
 
 
-// �� Set up dependencies in the auth controller
-const userRepository = new DisasterRepository();
+const disasterRepository = new DisasterRepository();
 
-const userUseCase = new DisasterUseCase(
-  userRepository,
+const disasterUseCase = new DisasterUseCase(
+  disasterRepository,
 );
-const userController = new DisasterController(userUseCase);
+const disasterController = new DisasterController(disasterUseCase);
 
 // 🔹 create new disaster report
-router.post("/create", (req: Request, res: Response) => {
-  userController.createNewDisasterReport(req, res);
+router.post("/report", (req: Request, res: Response) => {
+  disasterController.createNewDisasterReport(req, res);
 });
 
 

@@ -56,7 +56,6 @@ class AuthUseCase   {
     email: string,
     password: string
   ): Promise<{ user: User; token: string }> {
-    console.log(email, password);
 
     try {
       const existingUser = await this._userRepository.findUserByEmailOrPhone(

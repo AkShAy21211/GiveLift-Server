@@ -135,14 +135,9 @@ export const disasterReportValidationSchema = Joi.object({
       "any.required": "Location is required.",
     }),
 
-  reportedBy: Joi.string().hex().length(24).required().messages({
-    "string.base": "ReportedBy must be a string.",
-    "string.length": "ReportedBy must be exactly 24 characters long.",
-    "any.required": "ReportedBy is required.",
-  }),
 
   severity: Joi.string()
-    .valid("low", "medium", "high", "critical")
+    .valid("Low", "Medium", "High", "Critical")
     .required()
     .messages({
       "any.only":
