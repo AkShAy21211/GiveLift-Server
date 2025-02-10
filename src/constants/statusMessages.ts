@@ -2,7 +2,7 @@ export enum STATUS_MESSAGES {
   USER_NOT_FOUND = 'Account does not exist',
   USER_UPDATE_FAILED = 'Failed to update account',
   USER_UPDATE_SUCCESS = 'Account was updated successfully',
-  USER_ALREADY_EXISTS = 'User already exists',
+  USER_ALREADY_EXISTS = 'Account already exists',
   INVALID_CREDENTIALS = 'Invalid credentials',
   INVALID_EMAIL = 'Invalid email',
   EMAIL_ALREADY_EXISTS = 'Email already exists',

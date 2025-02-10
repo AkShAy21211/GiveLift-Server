@@ -16,7 +16,7 @@ import STATUS_CODES from "../constants/statusCodes.js";
 import STATUS_MESSAGES from "../constants/statusMessages.js";
 import ENVS from "../infrastructure/config/envConfig.js";
 class AuthController {
-  constructor(private _userUseCase: AuthUseCase) { }
+  constructor(private _userUseCase: AuthUseCase) {}
 
   async register(
     req: Request<{}, {}, RegisterUserDto>,
@@ -52,6 +52,7 @@ class AuthController {
       res.status(STATUS_CODES.OK).json({
         message: STATUS_MESSAGES.REGISTRATION_SUCCESS,
         token: savedData.token,
+        role: savedData.user.role,
       });
       return;
     } catch (error: any) {
@@ -98,6 +99,7 @@ class AuthController {
       res.status(STATUS_CODES.OK).json({
         message: STATUS_MESSAGES.LOGIN_SUCCESS,
         token: savedData.token,
+        role: savedData.user.role,
       });
       return;
     } catch (error: any) {
@@ -171,19 +173,19 @@ class AuthController {
     }
   }
 
-  logout(req:Request,res:Response):void {
+  logout(req: Request, res: Response): void {
     try {
       res.clearCookie("currentUser");
       res.status(STATUS_CODES.OK).json({
-        message: STATUS_MESSAGES.LOGIN_SUCCESS,
+        status: true,
+        message: STATUS_MESSAGES.LOGOUT_SUCCESS,
       });
-      
-    } catch (error:any) {
+    } catch (error: any) {
       Logger.error(error);
       res.status(error.statusCode || STATUS_CODES.INTERNAL_SERVER_ERROR).json({
+        status: false,
         message: error.message || STATUS_MESSAGES.INTERNAL_SERVER_ERROR,
       });
-      
     }
   }
 }

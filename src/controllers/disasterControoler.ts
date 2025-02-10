@@ -34,9 +34,6 @@ class DisasterController {
       return;
     }
     try {
-
-
-     
       await this._disasterUseCase.createAndSaveDisaster(
         currentUser._id,
         currentUser.role,
@@ -54,6 +51,26 @@ class DisasterController {
         message: error.message || STATUS_MESSAGES.INTERNAL_SERVER_ERROR,
       });
       return;
+    }
+  }
+
+  async fetchAllDisasters(req: Request, res: Response): Promise<void> {
+    const page = Number(req.query.page) || 1;
+    const limit = Number(req.query.limit) || 10;
+    const skip = (page - 1) * limit;
+    
+    try {
+      const data = await this._disasterUseCase.getchAllDisaster(
+        limit,
+        page,
+        skip
+      );
+      res.status(STATUS_CODES.OK).json( data );
+    } catch (error: any) {
+      Logger.error(error);
+      res.status(error.statusCode || STATUS_CODES.INTERNAL_SERVER_ERROR).json({
+        message: error.message || STATUS_MESSAGES.INTERNAL_SERVER_ERROR,
+      });
     }
   }
 }

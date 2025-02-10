@@ -77,7 +77,7 @@ class AuthUseCase   {
       if (!isValidPassword) {
         throw new AppError(
           STATUS_MESSAGES.INVALID_CREDENTIALS,
-          STATUS_CODES.UNAUTHORIZED
+          STATUS_CODES.BAD_REQUEST
         );
       }
 

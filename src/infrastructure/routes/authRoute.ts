@@ -48,7 +48,7 @@ router.post("/forget-password/verify", (req: Request, res: Response) => {
   authController.verifyForgetPassword(req, res);
 });
 
-router.post("/logout", (req: Request, res: Response) => {
+router.get("/logout", (req: Request, res: Response) => {
   authController.logout(req, res);
 });
 
