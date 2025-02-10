@@ -19,6 +19,12 @@ const disasterController = new DisasterController(disasterUseCase);
 router.get("/", (req: Request, res: Response) => {
   disasterController.fetchAllDisasters(req, res);
 });
+
+
+// fetch disaster report by id
+router.get("/:id", (req: Request, res: Response) => {
+  disasterController.fetchDisasterById(req, res);
+});
 // 🔹 create new disaster report
 router.post("/report", (req: Request, res: Response) => {
   disasterController.createNewDisasterReport(req, res);

@@ -41,12 +41,32 @@ class DisasterUseCase {
     skip: number
   ): Promise<{ disasters: DisasterReport[]; totalDisasters: number }> {
     try {
-      const disasters = await this._disasterRepository.findAll(limit,page,skip);
+      const disasters = await this._disasterRepository.findAll(
+        limit,
+        page,
+        skip
+      );
       const totalDisasters = await this._disasterRepository.countDocuments();
       return {
         disasters,
         totalDisasters,
       };
+    } catch (error: any) {
+      throw new AppError(error.message, STATUS_CODES.INTERNAL_SERVER_ERROR);
+    }
+  }
+
+  async getDisasterById(disasterId: string): Promise<DisasterReport> {
+    try {
+      const disaster = await this._disasterRepository.findById(disasterId);
+      if (!disaster) {
+        throw new AppError(
+          STATUS_MESSAGES.DISASTER_NOT_FOUND,
+          STATUS_CODES.NOT_FOUND
+        );
+      }
+
+      return disaster;
     } catch (error: any) {
       throw new AppError(error.message, STATUS_CODES.INTERNAL_SERVER_ERROR);
     }

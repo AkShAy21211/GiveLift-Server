@@ -23,6 +23,7 @@ export enum STATUS_MESSAGES {
   DISASTER_REPORT_FAILED = "Disaster report creation failed",
   LOGOUT_SUCCESS = "Logout succeeded",
   LOGOUT_FAILED = "Logout failed",
+  DISASTER_NOT_FOUND= "Disaster not found",
 }
 
 export default STATUS_MESSAGES

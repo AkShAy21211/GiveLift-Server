@@ -73,6 +73,19 @@ class DisasterController {
       });
     }
   }
+
+  async fetchDisasterById(req: Request, res: Response): Promise<void> {
+    const disasterId = req.params.id;
+    try {
+      const disaster = await this._disasterUseCase.getDisasterById(disasterId);
+      res.status(STATUS_CODES.OK).json(disaster);
+    } catch (error: any) {
+      Logger.error(error);
+      res.status(error.statusCode || STATUS_CODES.INTERNAL_SERVER_ERROR).json({
+        message: error.message || STATUS_MESSAGES.INTERNAL_SERVER_ERROR,
+      });
+    }
+  }
 }
 
 export default DisasterController;

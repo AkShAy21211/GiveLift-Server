@@ -14,8 +14,14 @@ class DisasterRepository implements IDisasterRepository {
       return null;
     }
   }
-  findById(id: string): Promise<DisasterReport | null> {
-    throw new Error("Method not implemented.");
+  async findById(id: string): Promise<DisasterReport | null> {
+    try {
+      const disaster = DisasterReportModel.findById(id);
+      return disaster.lean();
+    } catch (error: any) {
+      Logger.error(error.message);
+      return null;
+    }
   }
   async findAll(
     limit: number,
