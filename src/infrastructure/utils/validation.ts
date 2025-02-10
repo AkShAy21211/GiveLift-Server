@@ -1,17 +1,26 @@
 import Joi from "joi";
 
 export const addressValidator = Joi.object({
-  coord: Joi.array().items(Joi.number()).required().messages({
-    "array.base": "Coordinates must be an array of numbers",
-    "array.required": "Coordinates are required",
-  }),
-  cityL: Joi.string().required().messages({
-    "string.required": "City is required",
-  }),
+  city: Joi.string()
+    .required()
+    .messages({
+      "string.required": "City is required",
+    })
+    .optional(),
   district: Joi.string()
     .required()
     .messages({
       "string.required": "District is required",
+    })
+    .optional(),
+
+  pincode: Joi.number()
+    .integer()
+    .required()
+    .messages({
+      "number.base": "Pin Code must be a number.",
+      "number.integer": "Pin Code must be an integer.",
+      "any.required": "Pin Code is required.",
     })
     .optional(),
 });
@@ -37,7 +46,7 @@ export const userCreateValidator = Joi.object({
     "string.min": "Password must be at least 6 characters",
     "any.required": "Password is required",
   }),
-  address: addressValidator,
+  address: addressValidator.optional(),
   role: Joi.string().valid("user", "admin", "coordinator").required().messages({
     "any.only": 'Role must be "user" or "admin" or "coordinator" ',
     "any.required": "Role is required",
@@ -134,7 +143,6 @@ export const disasterReportValidationSchema = Joi.object({
       "object.base": "Location must be an object.",
       "any.required": "Location is required.",
     }),
-
 
   severity: Joi.string()
     .valid("Low", "Medium", "High", "Critical")

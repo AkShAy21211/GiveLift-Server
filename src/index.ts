@@ -3,7 +3,7 @@ import Logger from "./infrastructure/utils/logger.js";
 
 const start = () => {
   const app = new ExpressApp();
-  const PORT = process.env.PORT || 3000;
+  const PORT = process.env.PORT || 5000;
   try {
     app.configureConnections();
     app.startServer(PORT);

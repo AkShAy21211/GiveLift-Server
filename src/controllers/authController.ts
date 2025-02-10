@@ -170,6 +170,22 @@ class AuthController {
       return;
     }
   }
+
+  logout(req:Request,res:Response):void {
+    try {
+      res.clearCookie("currentUser");
+      res.status(STATUS_CODES.OK).json({
+        message: STATUS_MESSAGES.LOGIN_SUCCESS,
+      });
+      
+    } catch (error:any) {
+      Logger.error(error);
+      res.status(error.statusCode || STATUS_CODES.INTERNAL_SERVER_ERROR).json({
+        message: error.message || STATUS_MESSAGES.INTERNAL_SERVER_ERROR,
+      });
+      
+    }
+  }
 }
 
 export default AuthController;

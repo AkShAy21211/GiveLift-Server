@@ -37,10 +37,6 @@ const userSchema = new Schema<UserDocument>(
       default: false,
     },
     address: {
-      coordinates: {
-        type: [Number],
-        required: false,
-      },
       district: {
         type: String,
         required: false,
@@ -49,7 +45,7 @@ const userSchema = new Schema<UserDocument>(
         type: String,
         required: false,
       },
-      pinCode: {
+      pincode: {
         type: Number,
         required: false,
       },

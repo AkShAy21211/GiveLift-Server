@@ -6,6 +6,7 @@ import authRoute from "../routes/authRoute.js";
 import userRoute from "../routes/userRoute.js";
 import disasterRoute from "../routes/disasterRoute.js";
 import morgan from "morgan";
+import cors from "cors";
 import cookieParser from "cookie-parser";
 dotenv.config();
 
@@ -17,6 +18,11 @@ class ExpressApp {
     this._app.use(cookieParser())
     this._app.use(express.urlencoded({ extended: true }));
     this.app.use(morgan("tiny"));
+    this.app.use(cors({
+      origin: "http://localhost:3000",
+      credentials: true,
+      methods: ["GET", "POST", "PUT", "DELETE", "PATCH"]
+    }))
     this.app.use("/api/auth", authRoute);
     this.app.use("/api/user",userRoute);
     this.app.use("/api/disaster",disasterRoute);

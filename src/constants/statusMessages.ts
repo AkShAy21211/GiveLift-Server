@@ -21,6 +21,8 @@ export enum STATUS_MESSAGES {
   OTP_SEND = 'OTP has been send to your mobile number',
   DISASTER_REPORTED = "Disaster reported successfully",
   DISASTER_REPORT_FAILED = "Disaster report creation failed",
+  LOGOUT_SUCCESS = "Logout succeeded",
+  LOGOUT_FAILED = "Logout failed",
 }
 
 export default STATUS_MESSAGES
