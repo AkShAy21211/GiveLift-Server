@@ -1,14 +1,14 @@
-import { User } from "../entities/User.js"; 
+import { User } from "../entities/User.js";
 import BCrypt from "../../infrastructure/utils/bcrypt.js";
 import IUserRepository from "../interfaces/userRepository.interface.js";
 import AppError from "../../infrastructure/utils/AppError.js";
 import JsonWebToken from "../../infrastructure/utils/jwt.js";
 import IOtpRepository from "../interfaces/otpRepository.interfae.js";
 import Twilio from "../../infrastructure/services/twilioService.js";
-import STATUS_CODES from '../../constants/statusCodes.js';
+import STATUS_CODES from "../../constants/statusCodes.js";
 import STATUS_MESSAGES from "../../constants/statusMessages.js";
 
-class AuthUseCase   {
+class AuthUseCase {
   constructor(
     private _userRepository: IUserRepository,
     private _bcrypt: BCrypt,
@@ -56,7 +56,6 @@ class AuthUseCase   {
     email: string,
     password: string
   ): Promise<{ user: User; token: string }> {
-
     try {
       const existingUser = await this._userRepository.findUserByEmailOrPhone(
         email,
@@ -172,7 +171,10 @@ class AuthUseCase   {
       const isValidOtp = await this._twilio.compareOTP(otpEntity.otp, otp);
 
       if (!isValidOtp) {
-        throw new AppError(STATUS_MESSAGES.OTP_EXPIRED, STATUS_CODES.BAD_REQUEST);
+        throw new AppError(
+          STATUS_MESSAGES.OTP_EXPIRED,
+          STATUS_CODES.BAD_REQUEST
+        );
       }
 
       await this._otpRepository.deleteOtp(otpEntity.otp);
@@ -180,10 +182,6 @@ class AuthUseCase   {
       throw new AppError(error.message, error.statusCode);
     }
   }
-
-  
 }
-
-
 
 export default AuthUseCase;

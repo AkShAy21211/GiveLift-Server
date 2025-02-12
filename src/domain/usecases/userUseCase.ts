@@ -1,15 +1,14 @@
 import { User } from "../../domain/entities/User.js";
 import AppError from "../../infrastructure/utils/AppError.js";
 import IUserRepository from "../interfaces/userRepository.interface.js";
-import STATUS_CODES from '../../constants/statusCodes.js';
+import STATUS_CODES from "../../constants/statusCodes.js";
 import STATUS_MESSAGES from "../../constants/statusMessages.js";
 
-class UserUseCase   {
+class UserUseCase {
   constructor(private _userRepository: IUserRepository) {}
   async getUserById(id: string): Promise<User | null> {
     try {
       const user = await this._userRepository.findUserById(id);
-
       if (!user) {
         throw new AppError(
           STATUS_MESSAGES.USER_NOT_FOUND,
@@ -30,6 +29,7 @@ class UserUseCase   {
   ): Promise<User | null> {
     try {
       const user = await this._userRepository.findUserById(id);
+      
       if (!user) {
         throw new AppError(
           STATUS_MESSAGES.USER_NOT_FOUND,

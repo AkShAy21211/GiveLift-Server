@@ -79,7 +79,7 @@ export const updateUserSchema = Joi.object({
     coord: Joi.array().items(Joi.number()).min(1).optional(),
     city: Joi.string().min(1).optional(),
     district: Joi.string().min(1).optional(),
-    pinCode: Joi.number().optional(),
+    pincode: Joi.number().optional(),
   }).optional(),
   isVolunteer: Joi.boolean().optional(),
 });

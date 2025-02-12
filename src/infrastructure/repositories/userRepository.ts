@@ -28,7 +28,14 @@ class UserRepository implements IUserRepository {
   }
   async findUserById(id: string): Promise<User | null> {
     try {
-      return await UserModel.findById(id).lean();
+      return await UserModel.findById(id, {
+        password: 0,
+        role: 0,
+        _id: 0,
+        updatedAt: 0,
+        createdAt: 0,
+        __v: 0,
+      }).lean();
     } catch (error) {
       Logger.error(`Error finding user by id: ${id}: ${error}`);
       return null;
@@ -43,7 +50,7 @@ class UserRepository implements IUserRepository {
       return await UserModel.findByIdAndUpdate(
         id,
         { $set: updateData },
-        { new: true }
+        { new: true, upsert: true }
       ).lean();
     } catch (error) {
       Logger.error(`Error updating user with id: ${id}: ${error}`);

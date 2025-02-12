@@ -1,7 +1,7 @@
 export enum STATUS_MESSAGES {
   USER_NOT_FOUND = 'Account does not exist',
   USER_UPDATE_FAILED = 'Failed to update account',
-  USER_UPDATE_SUCCESS = 'Account was updated successfully',
+  USER_UPDATE_SUCCESS = 'Account updated successfully',
   USER_ALREADY_EXISTS = 'Account already exists',
   INVALID_CREDENTIALS = 'Invalid credentials',
   INVALID_EMAIL = 'Invalid email',
@@ -24,6 +24,7 @@ export enum STATUS_MESSAGES {
   LOGOUT_SUCCESS = "Logout succeeded",
   LOGOUT_FAILED = "Logout failed",
   DISASTER_NOT_FOUND= "Disaster not found",
+  SOMETHING_WENT_WRONG="Something went wrong"
 }
 
 export default STATUS_MESSAGES

@@ -16,10 +16,16 @@ const userUseCase = new UserUseCase(
 );
 const userController = new UserController(userUseCase);
 
-// 🔹 Register a new user
-router.put("/update/:userId", (req: Request, res: Response) => {
+// 🔹 update user profile
+router.put("/update-profile", (req: Request, res: Response) => {
   userController.updateUserProfile(req, res);
 });
+
+
+router.get("/me", (req: Request, res: Response) => {
+  userController.fetchUserById(req, res);
+});
+
 
 // �� Login an existing user
 
