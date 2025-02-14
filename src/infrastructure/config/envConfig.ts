@@ -9,6 +9,9 @@ const ENVS = {
   TWILIO_SID: process.env.TWILIO_SID,
   TWILIO_TOKEN: process.env.TWILIO_TOKEN,
   TWILIO_PHONE: process.env.TWILIO_PHONE,
+  ADMIN_EMAIL: process.env.ADMIN_EMAIL,
+  ADMIN_PASSWORD: process.env.ADMIN_PASSWORD,
+  ADMIN_PHONE:process.env.ADMIN_PHONE,
 };
 
 export default ENVS;

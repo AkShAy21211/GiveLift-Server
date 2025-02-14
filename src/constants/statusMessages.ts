@@ -24,7 +24,8 @@ export enum STATUS_MESSAGES {
   LOGOUT_SUCCESS = "Logout succeeded",
   LOGOUT_FAILED = "Logout failed",
   DISASTER_NOT_FOUND= "Disaster not found",
-  SOMETHING_WENT_WRONG="Something went wrong"
+  SOMETHING_WENT_WRONG="Something went wrong",
+  
 }
 
 export default STATUS_MESSAGES
