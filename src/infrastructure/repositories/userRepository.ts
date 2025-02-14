@@ -57,6 +57,32 @@ class UserRepository implements IUserRepository {
       return null;
     }
   }
+  async findCoordinators(limit: number, skip: number): Promise<{coordinators:User[],totalCoordinators:number} | null> {
+    try {
+      const totalCoordinators = await UserModel.countDocuments({role:"coordinator"})
+      const coordinators = await UserModel.find(
+        { role: "coordinator" },
+        {
+          password: 0,
+          createdAt: 0,
+          updatedAt: 0,
+          isVolunteer: 0,
+          role: 0,
+          __v: 0,
+        }
+      )
+        .skip(skip)
+        .limit(limit)
+        .lean();
+      return {
+        coordinators:coordinators,
+        totalCoordinators: totalCoordinators,
+      };
+    } catch (error) {
+      Logger.error(`Error finding coordinators: ${error}`);
+      return null;
+    }
+  }
 }
 
 export default UserRepository;

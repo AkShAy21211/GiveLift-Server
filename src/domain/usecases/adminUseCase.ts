@@ -4,6 +4,7 @@ import AppError from "../../infrastructure/utils/AppError.js";
 import STATUS_MESSAGES from "../../constants/statusMessages.js";
 import STATUS_CODES from "../../constants/statusCodes.js";
 import BCrypt from "../../infrastructure/utils/bcrypt.js";
+import { log } from "winston";
 
 class AdminUseCase {
   constructor(
@@ -11,7 +12,7 @@ class AdminUseCase {
     private _bcrypt: BCrypt
   ) {}
 
-  async createCordinator(cordinatorData: User) {
+  async createCordinator(cordinatorData: User): Promise<User> {
     try {
       const existingUser = await this._userRepository.findUserByEmailOrPhone(
         cordinatorData.email,
@@ -38,6 +39,22 @@ class AdminUseCase {
       }
 
       return newCordinator;
+    } catch (error: any) {
+      throw new AppError(error.message, error.statusCode);
+    }
+  }
+
+  async getCoordinators(limit:number,skip:number): Promise<{coordinators:User[],totalCoordinators:number} | null> {
+    try {
+      const data = await this._userRepository.findCoordinators(limit,skip);
+      
+      if (!data) {
+        throw new AppError(
+          STATUS_MESSAGES.SOMETHING_WENT_WRONG,
+          STATUS_CODES.INTERNAL_SERVER_ERROR
+        );
+      }
+      return data;
     } catch (error: any) {
       throw new AppError(error.message, error.statusCode);
     }

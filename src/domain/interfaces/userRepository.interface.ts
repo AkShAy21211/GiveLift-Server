@@ -8,6 +8,7 @@ interface IUserRepository {
     id: string,
     updateData: Partial<User>
   ): Promise<User | null>;
+  findCoordinators(limit:number,skip:number): Promise<{coordinators:User[],totalCoordinators:number}|null>;
 }
 
 export default IUserRepository;

@@ -18,8 +18,11 @@ const authUseCase = new AdminUseCase(userRepository, bcrypt);
 const authController = new AdminController(authUseCase);
 
 // 🔹 Register a new user
-router.post("/create-cordinator", (req: Request, res: Response) => {
+router.post("/create-coordinator", (req: Request, res: Response) => {
   authController.create(req, res);
 });
 
+router.get("/coordinators", (req: Request, res: Response) => {
+  authController.fetchCoordinators(req, res);
+});
 export default router;
