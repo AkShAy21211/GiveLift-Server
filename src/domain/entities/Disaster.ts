@@ -3,11 +3,10 @@ interface DisasterReport {
   description: string;
   type: string;
   location: {
-    type: 'Point'; 
     coordinates: number[];
     district: string;
     city: string;
-    pinCode: number;
+    pincode: number;
   };
   reportedBy?: string;
   byAdmin?:boolean;

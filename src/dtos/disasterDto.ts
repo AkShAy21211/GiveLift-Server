@@ -3,11 +3,10 @@ interface DisasterReportDto {
   description: string;
   type: string;
   location: {
-    type: 'Point'; 
     coordinates: number[];
     district: string;
     city: string;
-    pinCode: number;
+    pincode: number;
   };
   reportedBy: any;
   severity: string;

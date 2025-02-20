@@ -29,7 +29,10 @@ class DisasterRepository implements IDisasterRepository {
     skip: number
   ): Promise<DisasterReport[] | []> {
     try {
-      const disasters = DisasterReportModel.find().skip(skip).limit(limit);
+      const disasters = DisasterReportModel.find()
+        .skip(skip)
+        .limit(limit)
+        .sort({ createdAt: -1 });
       return disasters.lean();
     } catch (error: any) {
       Logger.error(error.message);

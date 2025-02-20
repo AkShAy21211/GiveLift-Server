@@ -11,7 +11,10 @@ const ENVS = {
   TWILIO_PHONE: process.env.TWILIO_PHONE,
   ADMIN_EMAIL: process.env.ADMIN_EMAIL,
   ADMIN_PASSWORD: process.env.ADMIN_PASSWORD,
-  ADMIN_PHONE:process.env.ADMIN_PHONE,
+  ADMIN_PHONE: process.env.ADMIN_PHONE,
+  CLOUDNAME: process.env.CLOUDNAME,
+  CLOUD_API: process.env.CLOUD_API,
+  CLOUD_API_SECRET: process.env.CLOUD_API_SECRET,
 };
 
 export default ENVS;

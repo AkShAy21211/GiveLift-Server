@@ -21,7 +21,7 @@ class ExpressApp {
     this._app.use(express.urlencoded({ extended: true }));
     this.app.use(morgan("tiny"));
     this.app.use(cors({
-      origin: ["http://localhost:3000","http://192.168.1.2:3000"],
+      origin: ["http://localhost:3000","http://192.168.1.3:3000"],
       credentials: true,
       methods: ["GET", "POST", "PUT", "DELETE", "PATCH"]
     }))

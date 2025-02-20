@@ -19,6 +19,8 @@ class DisasterController {
       ? JSON.parse(cookie)
       : null;
     const { error } = disasterReportValidationSchema.validate(body);
+    const images: Express.Multer.File[] =
+      (req.files as Express.Multer.File[]) || [];
 
     if (!currentUser) {
       res.status(STATUS_CODES.UNAUTHORIZED).json({
@@ -36,8 +38,8 @@ class DisasterController {
     try {
       await this._disasterUseCase.createAndSaveDisaster(
         currentUser._id,
-        currentUser.role,
-        body
+        body,
+        images
       );
 
       res.status(STATUS_CODES.CREATED).json({
@@ -58,14 +60,18 @@ class DisasterController {
     const page = Number(req.query.page) || 1;
     const limit = Number(req.query.limit) || 10;
     const skip = (page - 1) * limit;
-    
+
     try {
       const data = await this._disasterUseCase.getchAllDisaster(
         limit,
         page,
         skip
       );
-      res.status(STATUS_CODES.OK).json( data );
+      res.status(STATUS_CODES.OK).json({
+        ...data,
+        totalPages: Math.ceil((data?.total as number) / limit),
+        currentPage: page,
+      });
     } catch (error: any) {
       Logger.error(error);
       res.status(error.statusCode || STATUS_CODES.INTERNAL_SERVER_ERROR).json({

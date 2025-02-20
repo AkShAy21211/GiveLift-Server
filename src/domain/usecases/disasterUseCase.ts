@@ -1,5 +1,6 @@
 import STATUS_CODES from "../../constants/statusCodes.js";
 import STATUS_MESSAGES from "../../constants/statusMessages.js";
+import ICloudinaryService from "../../infrastructure/interfaces/cloudnaryService.interface.js";
 import AppError from "../../infrastructure/utils/AppError.js";
 import Logger from "../../infrastructure/utils/logger.js";
 import DisasterReport from "../entities/Disaster.js";
@@ -7,20 +8,29 @@ import USER_ROLE from "../enum/userRole.js";
 import IDisasterRepository from "../interfaces/disasterRepository.interface.js";
 
 class DisasterUseCase {
-  constructor(private _disasterRepository: IDisasterRepository) {}
+  constructor(
+    private _disasterRepository: IDisasterRepository,
+    private _cloudnary: ICloudinaryService
+  ) {}
 
   async createAndSaveDisaster(
     userId: string,
-    role: string,
-    disaster: DisasterReport
+    disaster: DisasterReport,
+    images:Express.Multer.File[]
   ): Promise<boolean> {
     try {
+      const media:string[] = []
       disaster.reportedBy = userId;
-      disaster.byAdmin = role === USER_ROLE.ADMIN || false;
-      console.log({
-        disaster,
-      });
 
+
+      if(images.length>0){
+
+        for(const image of images){
+          const uploadedImage = await this._cloudnary.uploadFile(image,"Disasters");
+          media.push(uploadedImage.secure_url);
+        }
+      }
+      disaster.media = media;
       const newDisaster = await this._disasterRepository.create(disaster);
 
       if (!newDisaster) {
@@ -39,7 +49,7 @@ class DisasterUseCase {
     limit: number,
     page: number,
     skip: number
-  ): Promise<{ disasters: DisasterReport[]; totalDisasters: number }> {
+  ): Promise<{ disasters: DisasterReport[]; total: number }> {
     try {
       const disasters = await this._disasterRepository.findAll(
         limit,
@@ -49,7 +59,7 @@ class DisasterUseCase {
       const totalDisasters = await this._disasterRepository.countDocuments();
       return {
         disasters,
-        totalDisasters,
+        total: totalDisasters,
       };
     } catch (error: any) {
       throw new AppError(error.message, STATUS_CODES.INTERNAL_SERVER_ERROR);

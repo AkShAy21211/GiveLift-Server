@@ -35,6 +35,7 @@ class UserRepository implements IUserRepository {
         updatedAt: 0,
         createdAt: 0,
         __v: 0,
+        isVolunteer: 0,
       }).lean();
     } catch (error) {
       Logger.error(`Error finding user by id: ${id}: ${error}`);
@@ -57,9 +58,14 @@ class UserRepository implements IUserRepository {
       return null;
     }
   }
-  async findCoordinators(limit: number, skip: number): Promise<{coordinators:User[],totalCoordinators:number} | null> {
+  async findCoordinators(
+    limit: number,
+    skip: number
+  ): Promise<{ coordinators: User[]; totalCoordinators: number } | null> {
     try {
-      const totalCoordinators = await UserModel.countDocuments({role:"coordinator"})
+      const totalCoordinators = await UserModel.countDocuments({
+        role: "coordinator",
+      });
       const coordinators = await UserModel.find(
         { role: "coordinator" },
         {
@@ -75,7 +81,7 @@ class UserRepository implements IUserRepository {
         .limit(limit)
         .lean();
       return {
-        coordinators:coordinators,
+        coordinators: coordinators,
         totalCoordinators: totalCoordinators,
       };
     } catch (error) {
