@@ -10,6 +10,7 @@ interface DisasterReportDto {
   };
   reportedBy: any;
   severity: string;
+  peopleEffected:number;
   status: boolean;
   media: string[];
 

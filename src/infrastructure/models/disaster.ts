@@ -26,6 +26,10 @@ const disasterReportSchema = new Schema<DisasterReportDocument>(
     reportedBy: { type: Schema.Types.ObjectId, ref: "User", required: true },
     severity: { type: String, required: true },
     status: { type: Boolean, default: true },
+    peopleEffected: {
+      type: Number,
+      required: true,
+    },
     media: { type: [String], required: true },
   },
   { timestamps: true }

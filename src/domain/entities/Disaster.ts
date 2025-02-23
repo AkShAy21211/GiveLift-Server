@@ -13,6 +13,7 @@ interface DisasterReport {
   severity: string;
   status: boolean;
   media: string[];
+  peopleEffected:number;
   createdAt?: Date;
   updatedAt?: Date;
 }
