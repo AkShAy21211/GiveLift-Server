@@ -89,6 +89,24 @@ class UserRepository implements IUserRepository {
       return null;
     }
   }
+  async resetPassword(email: string, password: string): Promise<User | null> {
+    try {
+      const user = await UserModel.findOneAndUpdate(
+        { email },
+        { $set: { password } },
+        {
+          new: true,
+        }
+      );
+
+      return user;
+    } catch (error) {
+      Logger.error(
+        `Error resetting password for user with email: ${email}: ${error}`
+      );
+      return null;
+    }
+  }
 }
 
 export default UserRepository;

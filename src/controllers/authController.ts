@@ -3,6 +3,7 @@ import {
   ForgetPasswordDto,
   LoginUserDto,
   RegisterUserDto,
+  ResetForgotedPasswordDto,
   VerifyForgetPasswordDto,
 } from "../dtos/userDtos.js";
 import {
@@ -173,6 +174,33 @@ class AuthController {
     }
   }
 
+  async resetPassword(
+    req: Request<{}, {}, ResetForgotedPasswordDto>,
+    res: Response
+  ): Promise<void> {
+    try {
+      const { body } = req;
+      const email: string = req.cookies.email;
+
+      const user = await this._userUseCase.resetForgotedPassword(
+        email,
+        body.password
+      );
+
+      res.clearCookie("email");
+      res.status(STATUS_CODES.OK).json({
+        message: STATUS_MESSAGES.PASSWORD_RESET_SUCCESS,
+      });
+      return;
+    } catch (error: any) {
+      Logger.error(error);
+
+      res.status(error.statusCode || STATUS_CODES.INTERNAL_SERVER_ERROR).json({
+        message: error.message || STATUS_MESSAGES.INTERNAL_SERVER_ERROR,
+      });
+      return;
+    }
+  }
   logout(req: Request, res: Response): void {
     try {
       res.clearCookie("currentUser");

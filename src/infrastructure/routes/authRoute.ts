@@ -38,14 +38,19 @@ router.post("/sign-in", (req: Request, res: Response) => {
   authController.login(req, res);
 });
 
-router.post("/forget-password", (req: Request, res: Response) => {
+router.post("/forgot-password", (req: Request, res: Response) => {
   authController.forgetPassword(req, res);
 });
 
 
 
-router.post("/forget-password/verify", (req: Request, res: Response) => {
+router.post("/forgot-password/verify", (req: Request, res: Response) => {
   authController.verifyForgetPassword(req, res);
+});
+
+
+router.post("/forgot-password/reset", (req: Request, res: Response) => {
+  authController.resetPassword(req, res);
 });
 
 router.get("/logout", (req: Request, res: Response) => {

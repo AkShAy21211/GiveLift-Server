@@ -30,3 +30,6 @@ export interface VerifyForgetPasswordDto{
   otp: string;
 }
 
+export interface ResetForgotedPasswordDto{
+  password: string;
+}

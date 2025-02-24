@@ -140,7 +140,11 @@ export const disasterReportValidationSchema = Joi.object({
       "string.base": "Severity must be a string.",
       "any.required": "Severity is required.",
     }),
-
+  peopleEffected: Joi.number().integer().required().messages({
+    "number.base": "People Effected must be a number.",
+    "number.integer": "People Effected must be an integer.",
+    "any.required": "People Effected is required.",
+  }),
   media: Joi.array().messages({
     "array.empty": "Media is required.",
     "array.length": "Media must contain at least one.",

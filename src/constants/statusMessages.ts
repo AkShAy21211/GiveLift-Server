@@ -25,6 +25,8 @@ export enum STATUS_MESSAGES {
   LOGOUT_FAILED = "Logout failed",
   DISASTER_NOT_FOUND= "Disaster not found",
   SOMETHING_WENT_WRONG="Something went wrong",
+  PASSWORD_RESET_FAILED="Password reset failed",
+  PASSWORD_RESET_SUCCESS="Password reset successful",
   
 }
 

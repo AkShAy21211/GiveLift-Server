@@ -9,6 +9,7 @@ interface IUserRepository {
     updateData: Partial<User>
   ): Promise<User | null>;
   findCoordinators(limit:number,skip:number): Promise<{coordinators:User[],totalCoordinators:number}|null>;
+  resetPassword(email:string,password:string):Promise<User | null>;
 }
 
 export default IUserRepository;

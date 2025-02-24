@@ -13,6 +13,8 @@ class DisasterController {
     req: Request<{}, {}, DisasterReportDto>,
     res: Response
   ): Promise<void> {
+    console.log(req.body);
+    
     const { body } = req;
     const cookie = req.cookies.currentUser;
     const currentUser: { role: string; _id: string; token: string } = cookie

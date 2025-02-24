@@ -182,6 +182,26 @@ class AuthUseCase {
       throw new AppError(error.message, error.statusCode);
     }
   }
+
+  async resetForgotedPassword(email: string, password: string): Promise<User> {
+    try {
+      const hashedPassword = await this._bcrypt.hashPassword(password);
+      const user = await this._userRepository.resetPassword(
+        email,
+        hashedPassword as string
+      );
+
+      if (!user) {
+        throw new AppError(
+          STATUS_MESSAGES.PASSWORD_RESET_FAILED,
+          STATUS_CODES.NOT_FOUND
+        );
+      }
+      return user;
+    } catch (error: any) {
+      throw new AppError(error.message, error.statusCode);
+    }
+  }
 }
 
 export default AuthUseCase;
