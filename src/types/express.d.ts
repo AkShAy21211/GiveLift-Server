@@ -4,9 +4,9 @@ import * as express from "express-serve-static-core";
 declare global {
   namespace Express {
     interface Request {
-      user?: {
+      currentUser?: {
         _id: string;
-        name: string;
+        role: string;
       };
     }
   }

@@ -1,6 +1,6 @@
 import { v2 as cloudinary, UploadApiResponse } from "cloudinary";
 import ICloudinaryService from "../interfaces/cloudnaryService.interface.js";
-import ENVS from "../config/envConfig.js";
+import ENVS from "../../config/envConfig.js";
 
 // Cloudinary Service Class
 class CloudinaryService implements ICloudinaryService {

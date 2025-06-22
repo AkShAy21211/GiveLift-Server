@@ -6,7 +6,7 @@ import AppError from "./AppError.js";
 export interface JwtPayload {
   _id: string;
   email: string;
-  role: "user" | "admin" | "coordinator";
+  role: "state_coordinator" | "district_coordinator" | "general_user";
   exp: number;
 }
 class JsonWebToken {

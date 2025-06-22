@@ -1,7 +1,7 @@
 import bcrypt from "bcryptjs";
 import twilio from "twilio";
-import ENVS from "../../infrastructure/config/envConfig.js";
-import Logger from "../../infrastructure/utils/logger.js";
+import ENVS from "../../config/envConfig.js";
+import Logger from "../../utils/logger.js";
 import ITwilio from "../interfaces/twilioService.interface.js";
 
 class Twilio  implements ITwilio{

@@ -16,9 +16,9 @@ class BCrypt {
   }
 
   //compare password with hashed password
-  comparePassword(password: string, hashedPassword: string) {
+  async comparePassword(password: string, hashedPassword: string) {
     try {
-      return bcrypt.compareSync(password, hashedPassword);
+      return bcrypt.compare(password, hashedPassword);
     } catch (error: any) {
       Logger.error(error.message);
     }

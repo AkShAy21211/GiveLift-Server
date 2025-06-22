@@ -1,110 +1,54 @@
-import { User } from "../../domain/entities/User.js";
-import IUserRepository from "../../domain/interfaces/userRepository.interface.js";
-import UserModel from "../models/user.js";
-import Logger from "../utils/logger.js";
+import { User } from "../../domain/entities/User";
+import UserModel from "../models/user";
+import { RepositoryError } from "../../shared/errors/RepositoryError";
+import IUserRepository from "../interfaces/IUserRepository";
 
 class UserRepository implements IUserRepository {
-  constructor() {}
-  async create(user: User): Promise<User | null> {
+
+  async findByEmail(email: string): Promise<User | null> {
     try {
-      const newUser = new UserModel(user);
-      const savedUser = await newUser.save();
-      return savedUser.toObject();
+      const data = await UserModel.findOne({ email });
+      return data ? data.toObject() : null;
     } catch (error) {
-      Logger.error(`Error creating user: ${error}`);
-      return null;
+      const err = error instanceof Error ? error : new Error("Unknown error");
+      throw new RepositoryError(err.message);
     }
   }
-  async findUserByEmailOrPhone(
-    email: string,
-    phone: string
-  ): Promise<User | null> {
+  async save(user: User): Promise<User> {
     try {
-      return await UserModel.findOne({ $or: [{ email }, { phone }] }).lean();
-    } catch (error) {
-      Logger.error(`Error finding user by email or phone: ${error}`);
-      return null;
-    }
-  }
-  async findUserById(id: string): Promise<User | null> {
-    try {
-      return await UserModel.findById(id, {
-        password: 0,
-        role: 0,
-        _id: 0,
-        updatedAt: 0,
-        createdAt: 0,
-        __v: 0,
-        isVolunteer: 0,
-      }).lean();
-    } catch (error) {
-      Logger.error(`Error finding user by id: ${id}: ${error}`);
-      return null;
+      const data = new UserModel(user);
+      await data.save();
+      return data.toObject();
+    } catch (error: unknown) {
+      const err = error instanceof Error ? error : new Error("Unknown error");
+      throw new RepositoryError(err.message);
     }
   }
 
-  async findUserByIdAndUpdate(
-    id: string,
-    updateData: Partial<User>
-  ): Promise<User | null> {
-    try {
-      return await UserModel.findByIdAndUpdate(
-        id,
-        { $set: updateData },
-        { new: true, upsert: true }
-      ).lean();
-    } catch (error) {
-      Logger.error(`Error updating user with id: ${id}: ${error}`);
-      return null;
-    }
+  async findById(id: string): Promise<User | null> {
+    throw new Error("Method not implemented.");
   }
-  async findCoordinators(
-    limit: number,
-    skip: number
-  ): Promise<{ coordinators: User[]; totalCoordinators: number } | null> {
-    try {
-      const totalCoordinators = await UserModel.countDocuments({
-        role: "coordinator",
-      });
-      const coordinators = await UserModel.find(
-        { role: "coordinator" },
-        {
-          password: 0,
-          createdAt: 0,
-          updatedAt: 0,
-          isVolunteer: 0,
-          role: 0,
-          __v: 0,
-        }
-      )
-        .skip(skip)
-        .limit(limit)
-        .lean();
-      return {
-        coordinators: coordinators,
-        totalCoordinators: totalCoordinators,
-      };
-    } catch (error) {
-      Logger.error(`Error finding coordinators: ${error}`);
-      return null;
-    }
-  }
-  async resetPassword(email: string, password: string): Promise<User | null> {
-    try {
-      const user = await UserModel.findOneAndUpdate(
-        { email },
-        { $set: { password } },
-        {
-          new: true,
-        }
-      );
 
-      return user;
+  async updateById(id: string, user: Partial<User>): Promise<User | null> {
+    
+    try {
+      const data = await UserModel.findByIdAndUpdate(id, user, { new: true });
+      
+      return data ? data.toObject() : null;
     } catch (error) {
-      Logger.error(
-        `Error resetting password for user with email: ${email}: ${error}`
-      );
-      return null;
+      const err = error instanceof Error ? error : new Error("Unknown error");
+      throw new RepositoryError(err.message);
+    }
+  }
+
+  async find(filter: Record<string, any>): Promise<User | null> {
+    try {
+      
+      const data = await UserModel.findOne(filter);      
+      return data ? data.toObject() : null;
+    } catch (error) {
+      const err = error instanceof Error ? error : new Error("Unknown error");
+      throw new RepositoryError(err.message);
     }
   }
 }

@@ -1,20 +1,20 @@
-export interface Address {
-  coord: [number];
-  district: string;
-  city: string;
-  pinCode: number;
-}
-
 export interface User {
   _id?: string;
   name: string;
   email: string;
-  phone: string;
-  avatar?: string;
   password: string;
+  isVolunteer?: boolean;
   role: string;
-  isVolunteer: boolean;
-  address?: Address;
+  phone?: string;
+  address?: string;
+  city?: string;
+  state?: string;
+  country?: string;
+  pincode?: string;
+  gender?: string;
+  resetToken?: string|null;
+  resetTokenExpires?: Date|null;
+  dob?: string;
   createdAt?: Date;
   updatedAt?: Date;
 }

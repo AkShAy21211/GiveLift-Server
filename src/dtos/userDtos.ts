@@ -4,32 +4,35 @@ export interface RegisterUserDto {
   name: string;
   email: string;
   password: string;
-  avatar?:string;
-  phone: string;
-  address: {
-    coord: [number];
-    city: string;
-    district: string;
-    pinCode:number;
-  };
-  role: string;
-  isVolunteer: boolean;
 }
 
-export interface LoginUserDto{
+export interface LoginUserDto {
   email: string;
   password: string;
-
 }
 
-export interface ForgetPasswordDto{
+export interface ForgetPasswordDto {
   phone: string;
 }
 
-export interface VerifyForgetPasswordDto{
+export interface VerifyForgetPasswordDto {
   otp: string;
 }
 
-export interface ResetForgotedPasswordDto{
+export interface ResetForgotedPasswordDto {
   password: string;
+}
+
+export interface InitStateCoordinatorDto {
+  name: string;
+  email: string;
+  password: string;
+  phone: string;
+  address: string;
+  city: string;
+  state: string;
+  country: string;
+  pincode: string;
+  gender: string;
+  dob: string;
 }

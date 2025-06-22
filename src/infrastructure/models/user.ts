@@ -1,7 +1,10 @@
-import mongoose, { Schema } from "mongoose";
-import { User } from "../../domain/entities/User.js";
+import mongoose, { Schema, Document } from "mongoose";
+import { User } from '../../domain/entities/User';
 
-interface UserDocument extends User, Document {}
+interface UserDocument extends Omit<User, "_id">, Document {
+  // `_id` is already present in Document, so omit it from User
+  _id: string; // or Types.ObjectId if you prefer
+}
 
 const userSchema = new Schema<UserDocument>(
   {
@@ -14,15 +17,6 @@ const userSchema = new Schema<UserDocument>(
       required: true,
       unique: true,
     },
-    avatar: {
-      type: String,
-      required: false,
-    },
-    phone: {
-      type: String,
-      required: true,
-      unique: true,
-    },
     password: {
       type: String,
       required: true,
@@ -30,25 +24,43 @@ const userSchema = new Schema<UserDocument>(
     role: {
       type: String,
       required: true,
-      enum: ["admin", "user", "coordinator"],
+      enum: ["state_coordinator", "district_coordinator", "general_user"],
     },
     isVolunteer: {
       type: Boolean,
       default: false,
     },
+    // New optional fields
+    phone: {
+      type: String,
+    },
     address: {
-      district: {
-        type: String,
-        required: false,
-      },
-      city: {
-        type: String,
-        required: false,
-      },
-      pincode: {
-        type: Number,
-        required: false,
-      },
+      type: String,
+    },
+    resetToken:{
+      type:String
+    },
+    resetTokenExpires:{
+      type:Date,
+    },
+    city: {
+      type: String,
+    },
+    state: {
+      type: String,
+    },
+    country: {
+      type: String,
+    },
+    pincode: {
+      type: String,
+    },
+    gender: {
+      type: String,
+      enum: ["male", "female", "other"], // optional: helps validation
+    },
+    dob: {
+      type: String, // or Date if you're storing as a date object
     },
   },
   {

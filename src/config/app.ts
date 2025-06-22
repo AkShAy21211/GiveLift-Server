@@ -1,13 +1,14 @@
 import express, { Express } from "express";
-import Logger from "../../utils/logger.js";
+import Logger from "../utils/logger.js";
 import dotenv from "dotenv";
-import connectToDataBase from "../../config/mongo.js";
+import connectToDataBase from "./mongo.js";
 import morgan from "morgan";
 import cors from "cors";
 import cookieParser from "cookie-parser";
+
 dotenv.config();
 
-import userAuthRoute from "../../infrastructure/routes/userAuthRoute.js";
+import userAuthRoute from "../infrastructure/routes/userAuthRoute.js";
 
 class ExpressApp {
   private _app: Express;
@@ -16,6 +17,7 @@ class ExpressApp {
     this._app.use(express.json());
     this._app.use(cookieParser())
     this._app.use(express.urlencoded({ extended: true }));
+    this.app.use(cookieParser()); 
     this.app.use(morgan("tiny"));
     this.app.use(cors({
       origin: ["http://localhost:3000","http://192.168.1.3:3000"],

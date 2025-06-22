@@ -1,33 +1,11 @@
-export enum STATUS_MESSAGES {
-  USER_NOT_FOUND = 'Account does not exist',
-  USER_UPDATE_FAILED = 'Failed to update account',
-  USER_UPDATE_SUCCESS = 'Account updated successfully',
-  USER_ALREADY_EXISTS = 'Account already exists',
-  INVALID_CREDENTIALS = 'Invalid credentials',
-  INVALID_EMAIL = 'Invalid email',
-  EMAIL_ALREADY_EXISTS = 'Email already exists',
-  AUTHENTICATION_FAILED = 'Authentication failed',
-  ACCESS_DENIED = 'Access denied',
-  LOGIN_FAILED = 'Login failed',
-  LOGIN_SUCCESS = 'Login succeeded',
-  REGISTRATION_SUCCESS = 'Registration succeeded',
-  REGISTRATION_FAILED = 'Registration failed',
-  INTERNAL_SERVER_ERROR = 'Internal server error',
-  OTP_CREATETION_FAILED = 'OTP creation failed',
-  OTP_NOTFOUND = 'Invaalid OTP or expired',
-  OTP_EXPIRED = 'Invaalid OTP or expired',
-  OTP_VERIFICATION_SUCCESS = 'OTP verification succeeded',
-  OTP_SEND_FAILED = 'OTP send failed',
-  OTP_SEND = 'OTP has been send to your mobile number',
-  DISASTER_REPORTED = "Disaster reported successfully",
-  DISASTER_REPORT_FAILED = "Disaster report creation failed",
-  LOGOUT_SUCCESS = "Logout succeeded",
-  LOGOUT_FAILED = "Logout failed",
-  DISASTER_NOT_FOUND= "Disaster not found",
-  SOMETHING_WENT_WRONG="Something went wrong",
-  PASSWORD_RESET_FAILED="Password reset failed",
-  PASSWORD_RESET_SUCCESS="Password reset successful",
-  
-}
+export const STATUS_MESSAGES = {
+  AUTH: {
+    LOGIN_SUCCESS: 'Login successful',
+    REGISTER_SUCCESS: 'Registration successful',
+    FAILURE: 'Invalid credentials',
+    TOKEN_EXPIRED: 'Token expired',
+    TOKEN_INVALID: 'Token invalid',
+  }
+} as const;
 
-export default STATUS_MESSAGES
+export default STATUS_MESSAGES;

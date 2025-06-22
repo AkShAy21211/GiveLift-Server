@@ -1,5 +1,5 @@
-import ExpressApp from "./infrastructure/config/app.js";
-import Logger from "./infrastructure/utils/logger.js";
+import ExpressApp from "./config/app.js";
+import Logger from "./utils/logger.js";
 
 const start = () => {
   const app = new ExpressApp();
