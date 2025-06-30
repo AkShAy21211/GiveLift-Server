@@ -1,3 +1,4 @@
+import { ObjectId } from "mongoose";
 import IEmailService from "../../infrastructure/interfaces/IEmailService";
 import IUserRepository from "../../infrastructure/interfaces/IUserRepository";
 import BCrypt from "../../utils/bcrypt";
@@ -20,9 +21,9 @@ class UserAuthUseCase implements IUserAuthUseCase {
     phone: string,
     role: string,
     address: string,
-    city: string,
-    state: string,
-    country: string,
+    district: string,
+    state: object,
+    country: object,
     pincode: string,
     gender: string,
     dob: string
@@ -41,10 +42,9 @@ class UserAuthUseCase implements IUserAuthUseCase {
         isVolunteer: true,
         phone,
         address,
-        city,
+        district,
         state,
         country,
-        pincode,
         gender,
         dob,
       });
@@ -59,6 +59,9 @@ class UserAuthUseCase implements IUserAuthUseCase {
   async register(
     name: string,
     email: string,
+    country: string,
+    state: string,
+    district: string,
     password: string,
     role: string
   ): Promise<void> {
@@ -74,6 +77,9 @@ class UserAuthUseCase implements IUserAuthUseCase {
       await this._userRepository.save({
         name,
         email,
+        country,
+        state,
+        district,
         password: encryptedPassword,
         role,
       });
@@ -91,17 +97,21 @@ class UserAuthUseCase implements IUserAuthUseCase {
       if (!user) {
         throw new Error("Email does not exist please register");
       }
+
+      if (!user.password) {
+        throw new Error("Please reset your password");
+      }
       const hashPassword = await this._bvrypt.comparePassword(
         password,
         user.password
       );
 
       if (!hashPassword) {
-        throw new Error("Invalid password");
+        throw new Error("Invalid credentials");
       }
 
       const token = this._jwt.generateToken({
-        _id: user._id as string,
+        _id: user?._id as string,
         email: user.email,
         role: user.role,
       });
@@ -143,7 +153,7 @@ class UserAuthUseCase implements IUserAuthUseCase {
       }
 
       const hashedToken = hashToken(token);
-      const user = await this._userRepository.find({
+      const user = await this._userRepository.findOne({
         resetToken: hashedToken,
         resetTokenExpires: { $gt: Date.now() },
       });
@@ -157,12 +167,11 @@ class UserAuthUseCase implements IUserAuthUseCase {
       // same password check using bcrypt
       const isSame = await this._bvrypt.comparePassword(
         password,
-        user.password
+        user.password||""
       );
       if (isSame) {
         throw new Error("New password cannot be the same as the old password");
       }
-
 
       await this._userRepository.updateById(user._id as string, {
         password: hashedPassword,
@@ -171,7 +180,7 @@ class UserAuthUseCase implements IUserAuthUseCase {
       await this._userRepository.updateById(user._id as string, {
         resetToken: null,
         resetTokenExpires: null,
-      })
+      });
 
       return true;
     } catch (error) {

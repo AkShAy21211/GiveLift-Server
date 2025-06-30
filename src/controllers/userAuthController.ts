@@ -21,7 +21,7 @@ class UserAuthController {
       password,
       phone,
       address,
-      city,
+      district,
       state,
       country,
       pincode,
@@ -37,7 +37,7 @@ class UserAuthController {
         phone,
         role,
         address,
-        city,
+        district,
         state,
         country,
         pincode,
@@ -58,10 +58,10 @@ class UserAuthController {
     req: Request<{}, {}, RegisterUserDto>,
     res: Response
   ) {
-    const { name, email, password } = req.body;
+    const { name, email, password,country,state,district } = req.body;
     const role = ROLES.GENERAL_USER;
     try {
-      await this._useCase.register(name, email, password, role);
+      await this._useCase.register(name, email, country,state,district, password, role);
       return res
         .status(201)
         .json({ message: STATUS_MESSAGES.AUTH.REGISTER_SUCCESS });
@@ -76,28 +76,26 @@ class UserAuthController {
 
     try {
       const response = await this._useCase.login(email, password);
-      
+
       res.cookie(
         "currentUser",
         JSON.stringify({
           token: response.token,
+          _id: response.user._id,
           role: response.user.role,
         }),
         {
           httpOnly: true,
-          secure: process.env.NODE_ENV === "production",
-          sameSite: "strict",
+          secure: false, 
+          sameSite: "lax", 
           maxAge: 1000 * 60 * 60 * 24,
         }
       );
-      return res
-        .status(200)
-        .json({
-          role: response.user.role,
-          message: STATUS_MESSAGES.AUTH.LOGIN_SUCCESS,
-        });
+      return res.status(200).json({
+        role: response.user.role,
+        message: STATUS_MESSAGES.AUTH.LOGIN_SUCCESS,
+      });
     } catch (error: any) {
-      
       return res
         .status(500)
         .json({ message: error?.message || "Something went wrong" });

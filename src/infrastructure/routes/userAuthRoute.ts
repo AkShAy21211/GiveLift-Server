@@ -8,11 +8,12 @@ import BCrypt from "../../utils/bcrypt";
 import JsonWebToken from "../../utils/jwt";
 import EmailService from "../services/emailService";
 import resend from "../../config/resend";
+import UserModel from "../models/user";
 
 const route = express.Router();
 
 const userAuthContoller = new UserAuthController(
-  new UserAuthUseCase(new UserRepository(), new BCrypt(), new JsonWebToken(),new EmailService(resend))
+  new UserAuthUseCase(new UserRepository(UserModel), new BCrypt(), new JsonWebToken(),new EmailService(resend))
 );
 
 route.post("/initialize/state-coordinator",validate(stateCoordinatorSchema),(req,res)=>{

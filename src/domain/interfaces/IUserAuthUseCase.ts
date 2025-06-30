@@ -4,6 +4,9 @@ interface IUserAuthUseCase {
   register(
     name: string,
     email: string,
+    country: string,
+    state: string,
+    district: string,
     password: string,
     role: string
   ): Promise<void>;
@@ -18,9 +21,9 @@ interface IUserAuthUseCase {
     phone: string,
     role: string,
     address: string,
-    city: string,
-    state: string,
-    country: string,
+    district: string,
+    state: object,
+    country: object,
     pincode: string,
     gender: string,
     dob: string

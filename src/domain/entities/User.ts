@@ -1,3 +1,5 @@
+import { Types } from "mongoose";
+
 export interface User {
   _id?: string;
   name: string;
@@ -7,11 +9,12 @@ export interface User {
   role: string;
   phone?: string;
   address?: string;
-  city?: string;
-  state?: string;
-  country?: string;
-  pincode?: string;
+  district?: string;
+  state?: object | string;
+  country?: object | string;
+  isActive?: boolean;
   gender?: string;
+  isDeleted?: boolean;
   resetToken?: string|null;
   resetTokenExpires?: Date|null;
   dob?: string;

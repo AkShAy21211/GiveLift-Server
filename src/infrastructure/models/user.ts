@@ -1,12 +1,8 @@
 import mongoose, { Schema, Document } from "mongoose";
 import { User } from '../../domain/entities/User';
 
-interface UserDocument extends Omit<User, "_id">, Document {
-  // `_id` is already present in Document, so omit it from User
-  _id: string; // or Types.ObjectId if you prefer
-}
 
-const userSchema = new Schema<UserDocument>(
+const userSchema = new Schema<User>(
   {
     name: {
       type: String,
@@ -19,7 +15,11 @@ const userSchema = new Schema<UserDocument>(
     },
     password: {
       type: String,
-      required: true,
+      required: false,
+    },
+    isActive:{
+      type: Boolean,
+      default: true,
     },
     role: {
       type: String,
@@ -43,18 +43,20 @@ const userSchema = new Schema<UserDocument>(
     resetTokenExpires:{
       type:Date,
     },
-    city: {
+    district: {
       type: String,
     },
     state: {
-      type: String,
+      type: Object,
+    },
+    isDeleted: {
+      type: Boolean,
+      default: false,
     },
     country: {
-      type: String,
+      type: Object,
     },
-    pincode: {
-      type: String,
-    },
+
     gender: {
       type: String,
       enum: ["male", "female", "other"], // optional: helps validation
@@ -68,6 +70,6 @@ const userSchema = new Schema<UserDocument>(
   }
 );
 
-const UserModel = mongoose.model<UserDocument>("User", userSchema);
+const UserModel = mongoose.model<User>("User", userSchema);
 
 export default UserModel;

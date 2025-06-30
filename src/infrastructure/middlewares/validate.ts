@@ -6,8 +6,8 @@ export const validate = (schema: ObjectSchema): RequestHandler => {
     const { error } = schema.validate(req.body, { abortEarly: false });
 
     if (error) {
-      const errors = error.details.map((detail) => detail.message);
-      res.status(400).json({ errors });
+      const message = error.details.map((detail) => detail.message);
+      res.status(400).json({ message });
       return;
     }
 

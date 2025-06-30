@@ -1,8 +1,10 @@
-import { ParamsDictionary } from "express-serve-static-core";
 
 export interface RegisterUserDto {
   name: string;
   email: string;
+  country: string;
+  state: string;
+  district: string;
   password: string;
 }
 
@@ -29,9 +31,9 @@ export interface InitStateCoordinatorDto {
   password: string;
   phone: string;
   address: string;
-  city: string;
-  state: string;
-  country: string;
+  district: string;
+  state: object;
+  country: object;
   pincode: string;
   gender: string;
   dob: string;
