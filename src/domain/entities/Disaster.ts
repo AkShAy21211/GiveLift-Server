@@ -1,16 +1,22 @@
 import { Types } from "mongoose";
+import { Document } from "postcss";
 
-export interface DisasterReport {
-    place: string;
-    disasterType?: string;
-    country?: string;
-    state?: string;
-    district?: string;
-    status: string;
-    severityLevel?: string;
-    peopleAffected: number;
-    reportedBy: Types.ObjectId;
-    situationDescription: string;
-    resourcesNeeded: string[];
-  }
-  
+export interface GeoPoint {
+  type: "Point";
+  coordinates: [number, number]; 
+}
+
+export interface Disaster extends Document {
+  disasterType: string;
+  address: string;
+  location?: GeoPoint
+  districtId: Types.ObjectId;
+  severity: string;
+  description?: string;
+  reportedBy: Types.ObjectId;
+  resourcesNeeded: string[];
+  volunteersAssigned: Types.ObjectId[];
+  status: string;
+  createdAt?: Date;
+  updatedAt?: Date;
+}

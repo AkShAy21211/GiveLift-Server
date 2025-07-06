@@ -1,39 +1,77 @@
-import mongoose, { Schema, Types } from "mongoose";
-import { DisasterReport } from "../../domain/entities/Disaster";
+import mongoose, { Schema, Document, Types } from "mongoose";
+import { Disaster, GeoPoint } from "../../domain/entities/Disaster";
 
-
-
-
-const DisasterReportSchema = new Schema<DisasterReport>(
+const geoPointSchema = new Schema<GeoPoint>(
   {
-    place: { type: String, required: true },
-    country: { type: Object },
-    state: { type: Object },
-    district: { type: String },
+    type: {
+      type: String,
+      enum: ["Point"],
+      required: true,
+      default:"Point"
+    },
+    coordinates: {
+      type: [Number, Number],
+      required: true,
+    },
+  },
+  { _id: false }
+);
+
+const disasterSchema = new Schema<Disaster>(
+  {
     disasterType: {
       type: String,
+      required: true,
     },
-    status:{
+    address: {
       type: String,
-      default: "pending"
+      required: true,
     },
-    severityLevel: {
+    location: {
+      type: geoPointSchema,
+      required: true,
+    },
+
+    districtId: {
+      type: Schema.Types.ObjectId,
+      ref: "District",
+      required: true,
+    },
+    severity: {
+      type: String,
+      required: true,
+    },
+    description: {
       type: String,
     },
-    reportedBy:{
-      type:Schema.Types.ObjectId,
-      ref:"User"
+    reportedBy: {
+      type: Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
     },
-    peopleAffected: { type: Number, default: 0 },
-    situationDescription: { type: String, default: "" },
-    resourcesNeeded: { type: [String], default: [] },
+    resourcesNeeded: {
+      type: [String],
+      default: [],
+    },
+    volunteersAssigned: {
+      type: [Schema.Types.ObjectId],
+      ref: "User",
+      default: [],
+    },
+    status: {
+      type: String,
+      enum: ["reported", "in_progress", "resolved", "closed"],
+      default: "reported",
+    },
   },
   {
-    timestamps: true, 
+    timestamps: true,
   }
 );
 
-export const DisasterReportModel = mongoose.model<DisasterReport>(
-  "DisasterReport",
-  DisasterReportSchema
-);
+disasterSchema.index({ location: "2dsphere" });
+disasterSchema.index({ districtId: 1, status: 1 });
+disasterSchema.index({ status: 1, severity: -1 });
+
+const DisasterModel = mongoose.model<Disaster>("Disaster", disasterSchema);
+export default DisasterModel;

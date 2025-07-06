@@ -8,19 +8,20 @@ class DonationUseCase implements IDonationUseCase {
     private _repository: IDonationRepository,
     private _userRepo: IUserRepository
   ) {}
-  async createDonation(donation: Donation): Promise<Donation> {
+  async createDonation(donatedBy:string,donation: Donation): Promise<Donation> {
     try {
       const donatedUser = await this._userRepo.findById(
-        donation.donatedBy as string
+        donatedBy as string
       );
-      const country = (donatedUser?.country as any) || "";
-      const state = (donatedUser?.state as any) || "";
-      const district = (donatedUser?.district as any) || "";
+      const country = donatedUser?.country || "";
+      const state = donatedUser?.state  || "";
+      const district = donatedUser?.district  || "";
 
       return await this._repository.create({
         ...donation,
         country,
         state,
+        donatedBy,
         district,
       });
     } catch (error) {

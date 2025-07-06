@@ -4,6 +4,8 @@
   "main": "dist/index.js",
   "type": "module",
   "scripts": {
+
+    "seed": "node --loader ts-node/esm ./seed/district.ts",
     "eslint:fix": "eslint --fix . --ext .ts",
     "build": "tsc",
     "dev": "nodemon",

@@ -15,34 +15,19 @@ class UserAuthController {
     req: Request<{}, {}, InitStateCoordinatorDto>,
     res: Response
   ) {
-    const {
-      name,
-      email,
-      password,
-      phone,
-      address,
-      district,
-      state,
-      country,
-      pincode,
-      gender,
-      dob,
-    } = req.body;
+    const { name, email, password, phone, address, district, state, country } =
+      req.body;
     try {
       const role = ROLES.STATE_COORDINATOR;
       await this._useCase.initializeStateCoordinator(
         name,
         email,
-        password,
         phone,
-        role,
-        address,
-        district,
-        state,
         country,
-        pincode,
-        gender,
-        dob
+        state,
+        district,
+        password,
+        role
       );
       res.status(200).json({
         message: STATUS_MESSAGES.AUTH.REGISTER_SUCCESS,
@@ -58,10 +43,19 @@ class UserAuthController {
     req: Request<{}, {}, RegisterUserDto>,
     res: Response
   ) {
-    const { name, email, password,country,state,district } = req.body;
+    const { name, email, phone, password, country, state, district } = req.body;
     const role = ROLES.GENERAL_USER;
     try {
-      await this._useCase.register(name, email, country,state,district, password, role);
+      await this._useCase.register(
+        name,
+        email,
+        phone,
+        country,
+        state,
+        district,
+        password,
+        role
+      );
       return res
         .status(201)
         .json({ message: STATUS_MESSAGES.AUTH.REGISTER_SUCCESS });
@@ -86,8 +80,8 @@ class UserAuthController {
         }),
         {
           httpOnly: true,
-          secure: false, 
-          sameSite: "lax", 
+          secure: false,
+          sameSite: "lax",
           maxAge: 1000 * 60 * 60 * 24,
         }
       );
@@ -127,6 +121,21 @@ class UserAuthController {
     try {
       await this._useCase.resetPassword(token, password);
       return res.status(200).json({ message: "Password reset successfully" });
+    } catch (error: any) {
+      return res
+        .status(500)
+        .json({ message: error?.message || "Something went wrong" });
+    }
+  }
+  async logoutController(req: Request, res: Response) {
+    try {
+      res.clearCookie("currentUser", {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "strict",
+      });
+
+      return res.status(200).json({ message: "Logout successful" });
     } catch (error: any) {
       return res
         .status(500)

@@ -1,63 +1,67 @@
-import { User } from "../../domain/entities/User";
+import { AppUser } from "../../domain/entities/User";
 import { RepositoryError } from "../../shared/errors/RepositoryError";
 import IUserRepository from "../interfaces/IUserRepository";
-import { Model } from "mongoose";
+import { FilterQuery, Model, Types } from "mongoose";
+
+interface FindOptions {
+  filters?: FilterQuery<AppUser>;
+  sort?: string;
+  page?: number;
+  limit?: number;
+}
 
 class UserRepository implements IUserRepository {
-
-  constructor(private readonly userModel: Model<User>) {}
- async findOne(filters: Record<string, any>): Promise<User | null> {
+  constructor(private readonly userModel: Model<AppUser>) {}
+  async findOne(filters: FilterQuery<AppUser>): Promise<AppUser | null> {
     try {
-      return await this.userModel.findOne(filters).lean().exec();
-    } catch (error) {
-      throw new RepositoryError("Error finding user");
-      
+      const user = await this.userModel.findOne(filters).lean().exec();
+      return user as AppUser;
+    } catch (error: any) {
+      const errMsg = error instanceof Error ? error.message : String(error);
+      throw new RepositoryError(
+        `Failed to find user. Filters: ${JSON.stringify(filters)}. Error: ${errMsg}`
+      );
     }
   }
   async find({
-    filters,
+    filters = {},
     sort,
-    page,
-    limit,
-  }: {
-    filters?: Record<string, any>;
-    sort?: any;
-    page?: number;
-    limit?: number;
-  }): Promise<User[]> {
+    page = 1,
+    limit = 10,
+  }: FindOptions): Promise<AppUser[] | []> {
     try {
-      const query = {} as any;
+      const query: FilterQuery<AppUser> = {};
 
-      // Dynamically build filter query
-      if (filters) {
-        for (const [key, value] of Object.entries(filters)) {
-          if (value === undefined) continue;
-
+      // Apply filters
+      for (const [key, value] of Object.entries(filters)) {
+        if (value !== undefined) {
           query[key] = value;
         }
       }
 
-      // Handle sort
-      const sortOption = {} as any;
+      // Sort processing
+      const sortOption: Record<string, 1 | -1> = {};
       if (sort) {
         const [field, order] = sort.split("_");
         sortOption[field] = order === "desc" ? -1 : 1;
       }
-      let skip;
-      if (page && limit) {
-        skip = (page - 1) * limit;
-      }
 
+      const skip = (page - 1) * limit;
 
-      return await this.userModel.find(query)
+      const users = await this.userModel
+        .find(query)
         .sort(sortOption)
-        .skip(skip as number)
-        .limit(limit as number);
+        .skip(skip)
+        .limit(limit)
+        .lean()
+        .exec();
+      return users as AppUser[];
     } catch (error: any) {
-      throw new RepositoryError(error);
+      const errMsg = error instanceof Error ? error.message : String(error);
+      throw new RepositoryError(`Error in find(): ${errMsg}`);
     }
   }
-  async findByEmail(email: string): Promise<User | null> {
+  async findByEmail(email: string): Promise<AppUser | null> {
     try {
       const data = await this.userModel.findOne({ email });
       return data ? data.toObject() : null;
@@ -66,7 +70,7 @@ class UserRepository implements IUserRepository {
       throw new RepositoryError(err.message);
     }
   }
-  async save(user: User): Promise<User> {
+  async save(user: AppUser): Promise<AppUser> {
     try {
       const data = new this.userModel(user);
       await data.save();
@@ -77,23 +81,29 @@ class UserRepository implements IUserRepository {
     }
   }
 
-  async findById(id: string): Promise<User | null> {
+  async findById(id: string): Promise<AppUser | null> {
     try {
-      
-      const data = await this.userModel.findById(id);
+      const objectId = new Types.ObjectId(id);
+      const data = await this.userModel.findById(objectId);
       return data ? data.toObject() : null;
     } catch (error) {
       const err = error instanceof Error ? error : new Error("Unknown error");
       throw new RepositoryError(err.message);
-      
     }
   }
 
-  async updateById(id: string, user: Partial<User>): Promise<User> {
+  async updateById(id: string, user: Partial<AppUser>): Promise<AppUser> {
     try {
-      const data = await this.userModel.findByIdAndUpdate(id, user, { new: true });
+      const objectId = new Types.ObjectId(id);
+      const data = await this.userModel.findByIdAndUpdate(objectId, user, {
+        new: true,
+      });
 
-      return data?.toObject() as User;
+      if (!data) {
+        throw new RepositoryError("User not found");
+      }
+
+      return data.toObject();
     } catch (error) {
       const err = error instanceof Error ? error : new Error("Unknown error");
       throw new RepositoryError(err.message);

@@ -1,10 +1,9 @@
-import { ObjectId } from "mongoose";
 import IEmailService from "../../infrastructure/interfaces/IEmailService";
 import IUserRepository from "../../infrastructure/interfaces/IUserRepository";
 import BCrypt from "../../utils/bcrypt";
 import JsonWebToken from "../../utils/jwt";
 import { generateResetToken, hashToken } from "../../utils/token";
-import { User } from "../entities/User";
+import { AppUser } from "../entities/User";
 import IUserAuthUseCase from "../interfaces/IUserAuthUseCase";
 
 class UserAuthUseCase implements IUserAuthUseCase {
@@ -17,37 +16,36 @@ class UserAuthUseCase implements IUserAuthUseCase {
   async initializeStateCoordinator(
     name: string,
     email: string,
-    password: string,
     phone: string,
-    role: string,
-    address: string,
+    country: string,
+    state: string,
     district: string,
-    state: object,
-    country: object,
-    pincode: string,
-    gender: string,
-    dob: string
+    password: string,
+    role: string
   ): Promise<boolean> {
     try {
       const user = await this._userRepository.findByEmail(email);
       if (user) {
         throw new Error("User already exists");
       }
+
       const hashedPassword = await this._bvrypt.hashPassword(password);
-      const userToCreate = await this._userRepository.save({
+
+      const newUser = {
         name,
         email,
-        password: hashedPassword as string,
-        role,
-        isVolunteer: true,
         phone,
-        address,
-        district,
-        state,
-        country,
-        gender,
-        dob,
-      });
+        password: hashedPassword as string,
+        address: {
+          country,
+          state,
+          district,
+        },
+        role,
+        isVolunteer: false,
+      };
+
+      const userToCreate = await this._userRepository.save(newUser as AppUser);
       if (userToCreate) {
         return true;
       }
@@ -59,6 +57,7 @@ class UserAuthUseCase implements IUserAuthUseCase {
   async register(
     name: string,
     email: string,
+    phone: string,
     country: string,
     state: string,
     district: string,
@@ -66,23 +65,32 @@ class UserAuthUseCase implements IUserAuthUseCase {
     role: string
   ): Promise<void> {
     try {
-      const user = await this._userRepository.findByEmail(email);
+      const user = await this._userRepository.findOne({
+        email: email,
+        phone: phone,
+      });
       if (user) {
-        throw new Error("Email already in use");
+        throw new Error("User already exists");
       }
+
       // encrypt password
-      const encryptedPassword = (await this._bvrypt.hashPassword(
-        password
-      )) as string;
-      await this._userRepository.save({
+      const hashedPassword = await this._bvrypt.hashPassword(password);
+
+      const newUser = {
         name,
         email,
-        country,
-        state,
-        district,
-        password: encryptedPassword,
+        phone,
+        password: hashedPassword as string,
+        address: {
+          country,
+          state,
+          district,
+        },
         role,
-      });
+        isVolunteer: false,
+      };
+
+      await this._userRepository.save(newUser as AppUser);
     } catch (error) {
       throw error;
     }
@@ -90,7 +98,7 @@ class UserAuthUseCase implements IUserAuthUseCase {
   async login(
     email: string,
     password: string
-  ): Promise<{ user: User; token: string }> {
+  ): Promise<{ user: AppUser; token: string }> {
     try {
       const user = await this._userRepository.findByEmail(email);
 
@@ -111,7 +119,7 @@ class UserAuthUseCase implements IUserAuthUseCase {
       }
 
       const token = this._jwt.generateToken({
-        _id: user?._id as string,
+        _id: user?._id as any,
         email: user.email,
         role: user.role,
       });
@@ -130,7 +138,7 @@ class UserAuthUseCase implements IUserAuthUseCase {
       }
 
       const { token, hash } = generateResetToken();
-      await this._userRepository.updateById(user._id as string, {
+      await this._userRepository.updateById(user._id as any, {
         resetToken: hash,
         resetTokenExpires: new Date(Date.now() + 1000 * 60 * 15),
       });
@@ -167,17 +175,17 @@ class UserAuthUseCase implements IUserAuthUseCase {
       // same password check using bcrypt
       const isSame = await this._bvrypt.comparePassword(
         password,
-        user.password||""
+        user.password || ""
       );
       if (isSame) {
         throw new Error("New password cannot be the same as the old password");
       }
 
-      await this._userRepository.updateById(user._id as string, {
+      await this._userRepository.updateById(user._id as any, {
         password: hashedPassword,
       });
 
-      await this._userRepository.updateById(user._id as string, {
+      await this._userRepository.updateById(user._id as any, {
         resetToken: null,
         resetTokenExpires: null,
       });

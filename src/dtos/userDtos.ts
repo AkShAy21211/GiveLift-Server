@@ -1,7 +1,7 @@
-
 export interface RegisterUserDto {
   name: string;
   email: string;
+  phone: string;
   country: string;
   state: string;
   district: string;
@@ -32,9 +32,31 @@ export interface InitStateCoordinatorDto {
   phone: string;
   address: string;
   district: string;
-  state: object;
-  country: object;
+  state: string;
+  country: string;
   pincode: string;
   gender: string;
   dob: string;
+}
+
+export interface CreateUserDto {
+  name: string;
+  email: string;
+  phone: string;
+  password: string;
+  role: string;
+  district: string;
+  state: string;
+  country: string;
+}
+
+export interface UpdateUserDto {
+  name: string;
+  email: string;
+  phone: string;
+  password: string;
+  role: string;
+  district: string;
+  state: string;
+  country: string;
 }

@@ -11,7 +11,8 @@ dotenv.config();
 import userAuthRoute from "../infrastructure/routes/userAuthRoute.js";
 import userRoute from "../infrastructure/routes/userRoute.js";
 import disasterRoute from "../infrastructure/routes/disasterRoute.js";
-import donationRoute from "../infrastructure/routes/donationRoute.js"
+import donationRoute from "../infrastructure/routes/donationRoute.js";
+import districtRoute from "../infrastructure/routes/districtRoute.js"
 
 class ExpressApp {
   private _app: Express;
@@ -39,6 +40,8 @@ class ExpressApp {
     this.app.use("/api/users", userRoute);
     this.app.use("/api/disaster", disasterRoute);
     this.app.use("/api/donation",donationRoute)
+    this.app.use("/api/districts",districtRoute)
+
   }
 
   public get app(): Express {

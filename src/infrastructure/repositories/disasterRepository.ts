@@ -1,11 +1,11 @@
 import { Model } from "mongoose";
-import { DisasterReport } from "../../domain/entities/Disaster";
+import { Disaster } from "../../domain/entities/Disaster";
 import IDisasterRepository from "../interfaces/IDisasterRepository";
 import { RepositoryError } from "../../shared/errors/RepositoryError";
 
 class DisasterRepository implements IDisasterRepository {
-  constructor(private readonly disasterModel: Model<DisasterReport>) {}
-  async updateById(id: string, disaster: Partial<DisasterReport>): Promise<DisasterReport | null> {
+  constructor(private readonly disasterModel: Model<Disaster>) {}
+  async updateById(id: string, disaster: Partial<Disaster>): Promise<Disaster | null> {
     try {
       const updatedDisaster = await this.disasterModel.findByIdAndUpdate(
         id,
@@ -29,7 +29,7 @@ class DisasterRepository implements IDisasterRepository {
     sort?: any;
     page?: number;
     limit?: number;
-  }): Promise<DisasterReport[]> {
+  }): Promise<Disaster[]> {
     try {
       const query = {} as any;
 
@@ -62,7 +62,7 @@ class DisasterRepository implements IDisasterRepository {
       throw new RepositoryError("Error finding disaster report");
     }
   }
-  async create(disaster: DisasterReport): Promise<DisasterReport> {
+  async create(disaster: Disaster): Promise<Disaster> {
     try {
       return this.disasterModel.create(disaster);
     } catch (error) {

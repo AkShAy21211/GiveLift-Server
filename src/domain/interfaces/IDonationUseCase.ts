@@ -1,4 +1,4 @@
-import Donation from "../entities/Donation";
+import {Donation} from "../entities/Donation";
 
 interface IDonationUseCase {
     
@@ -6,7 +6,7 @@ interface IDonationUseCase {
      * Create a new donation
      * @param donation 
      */
-    createDonation(donation: Donation): Promise<Donation>;
+    createDonation(donatedBy:string,donation: Donation): Promise<Donation>;
 
     /**
      * Get all donations

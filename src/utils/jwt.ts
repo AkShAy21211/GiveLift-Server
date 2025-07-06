@@ -2,6 +2,7 @@ import jwt from "jsonwebtoken";
 import ENVS from "../config/envConfig.js";
 import Logger from "./logger.js";
 import AppError from "./AppError.js";
+import { ObjectId } from "mongoose";
 
 export interface JwtPayload {
   _id: string;
@@ -15,7 +16,7 @@ class JsonWebToken {
     this._secret = ENVS.JWT_SECRET as string;
   }
   
-  generateToken(payload: { _id: string; email: string,role:string }): string {
+  generateToken(payload: { _id: ObjectId; email: string,role:string }): string {
     try {
       const token = jwt.sign(payload, this._secret, { expiresIn: "24h" });
       return token;

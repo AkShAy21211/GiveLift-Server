@@ -6,6 +6,8 @@ import DonationModel from "../models/donation";
 import UserRepository from "../repositories/userRepository";
 import UserModel from "../models/user";
 import { authenticate } from "../middlewares/auth";
+import { validate } from "../middlewares/validate";
+import { donationSchema } from "../validation/donation";
 
 const route = express.Router();
 
@@ -16,7 +18,7 @@ const donationController = new DonationController(
   )
 );
 
-route.post("/create", authenticate,(req, res) => {
+route.post("/create", validate(donationSchema), authenticate, (req, res) => {
   donationController.createDonation(req, res);
 });
 

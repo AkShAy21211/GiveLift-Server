@@ -1,23 +1,26 @@
 import { Types } from "mongoose";
 
-export interface User {
-  _id?: string;
+export interface Address {
+  district?: string;
+  state?: string;
+  country?: string;
+}
+
+export interface AppUser  extends Document {
+  _id?: Types.ObjectId;
   name: string;
   email: string;
-  password: string;
-  isVolunteer?: boolean;
+  password?: string;
+  phone: string;
+  address?: Address;
   role: string;
-  phone?: string;
-  address?: string;
-  district?: string;
-  state?: object | string;
-  country?: object | string;
-  isActive?: boolean;
-  gender?: string;
-  isDeleted?: boolean;
-  resetToken?: string|null;
+  isVolunteer: boolean;
+  reputationScore?: number;
+  badges?: string[];
+  resetToken?: string | null;
   resetTokenExpires?: Date|null;
-  dob?: string;
+  isDeleted?: boolean;
+  isActive?: boolean;
   createdAt?: Date;
   updatedAt?: Date;
 }

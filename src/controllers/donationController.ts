@@ -1,17 +1,14 @@
 import { Request, Response } from "express-serve-static-core";
 import IDonationUseCase from "../domain/interfaces/IDonationUseCase";
-import { DonationDto } from "../dtos/donationDtos";
+import { CreateDonationDto } from "../dtos/donationDtos";
 
 class DonationController {
   constructor(private _donationUseCase: IDonationUseCase) {}
-  async createDonation(req: Request, res: Response) {
-    const donation = req.body;
-    const _id =  req.currentUser?._id;
+  async createDonation(req: Request<{}, {}, CreateDonationDto>, res: Response) {
+    const donation = req.body as any;
+    const _id = req.currentUser?._id as any;
     try {
-      const response = await this._donationUseCase.createDonation({
-        ...donation,
-        donatedBy: _id,
-      });
+      await this._donationUseCase.createDonation(_id, donation);
       res.status(200).json({
         message:
           "Donation requested successfully your donation will be verfied soon",

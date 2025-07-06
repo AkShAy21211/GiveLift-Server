@@ -1,9 +1,10 @@
-import { User } from "../entities/User";
+import { AppUser } from "../entities/User";
 
 interface IUserAuthUseCase {
   register(
     name: string,
     email: string,
+    phone: string,
     country: string,
     state: string,
     district: string,
@@ -13,20 +14,16 @@ interface IUserAuthUseCase {
   login(
     email: string,
     password: string
-  ): Promise<{ user: User; token: string }>;
+  ): Promise<{ user: AppUser; token: string }>;
   initializeStateCoordinator(
     name: string,
     email: string,
-    password: string,
     phone: string,
-    role: string,
-    address: string,
+    country: string,
+    state: string,
     district: string,
-    state: object,
-    country: object,
-    pincode: string,
-    gender: string,
-    dob: string
+    password: string,
+    role: string
   ): Promise<boolean>;
 
   forgotPassword(email: string): Promise<void>;

@@ -1,12 +1,21 @@
-import mongoose, { Schema, Document } from "mongoose";
-import { User } from '../../domain/entities/User';
+import mongoose, { Schema } from "mongoose";
+import { Address, AppUser } from "../../domain/entities/User";
 
+const addressSchema = new Schema<Address>(
+  {
+    district: { type: String },
+    state: { type: String },
+    country: { type: String },
+  },
+  { _id: false }
+);
 
-const userSchema = new Schema<User>(
+const userSchema = new Schema<AppUser>(
   {
     name: {
       type: String,
       required: true,
+      unique: true,
     },
     email: {
       type: String,
@@ -15,12 +24,12 @@ const userSchema = new Schema<User>(
     },
     password: {
       type: String,
-      required: false,
     },
-    isActive:{
-      type: Boolean,
-      default: true,
+
+    phone: {
+      type: String,
     },
+    address: addressSchema,
     role: {
       type: String,
       required: true,
@@ -30,46 +39,40 @@ const userSchema = new Schema<User>(
       type: Boolean,
       default: false,
     },
-    // New optional fields
-    phone: {
-      type: String,
-    },
-    address: {
-      type: String,
+    reputationScore: {
+      type: Number,
+      default: 0,
     },
     resetToken:{
-      type:String
+      type: String,
+      default: null
     },
     resetTokenExpires:{
-      type:Date,
+      type: Date,
+      default: null
     },
-    district: {
-      type: String,
+    badges: {
+      type: [String],
+      default: [],
     },
-    state: {
-      type: Object,
-    },
-    isDeleted: {
+    isActive:{
       type: Boolean,
-      default: false,
+      default: true
     },
-    country: {
-      type: Object,
-    },
-
-    gender: {
-      type: String,
-      enum: ["male", "female", "other"], // optional: helps validation
-    },
-    dob: {
-      type: String, // or Date if you're storing as a date object
-    },
+    isDeleted:{
+      type: Boolean,
+      default: false
+    }
   },
   {
     timestamps: true,
   }
 );
 
-const UserModel = mongoose.model<User>("User", userSchema);
+userSchema.index({ username: 1 }, { unique: true });
+userSchema.index({ email: 1 }, { unique: true });
+userSchema.index({ role: 1 });
+userSchema.index({ "address.district": 1, role: 1 });
 
+const UserModel = mongoose.model<AppUser>("User", userSchema);
 export default UserModel;

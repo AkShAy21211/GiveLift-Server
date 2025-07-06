@@ -1,16 +1,19 @@
+import { Types } from "mongoose";
+
+export interface ResourceDetails {
+  resourceType: string;
+  quantity: number;
+  unit: string;
+}
 
 export interface Donation extends Document {
-    resourceType: string;
-    quantity: number;
-    address: string;
-    note?: string;
-    donatedBy: string;
-    country?: string;
-    state?: string;
-    district?: string;
-    status: 'pending' | 'assigned' | 'completed';
-    createdAt?: Date;
-    updatedAt?: Date;
-  }
-
-export default Donation;
+  donatedBy: Types.ObjectId;
+  donationType: "monetary" | "resource";
+  resourceDetails?: ResourceDetails;
+  monetaryAmount?: number;
+  transactionId?: string;
+  status: "pending" | "approved" | "rejected" | "fulfilled";
+  assignedToDisaster?: Types.ObjectId;
+  createdAt?: Date;
+  updatedAt?: Date;
+}
