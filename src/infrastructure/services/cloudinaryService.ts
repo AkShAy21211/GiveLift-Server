@@ -33,5 +33,4 @@ class CloudinaryService implements ICloudinaryService {
   }
 }
 
-// Export as Singleton
 export default CloudinaryService;

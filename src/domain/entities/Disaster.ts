@@ -4,19 +4,19 @@ import { Document } from "postcss";
 export interface GeoPoint {
   type: "Point";
   coordinates: [number, number]; 
+  label: string;
 }
 
 export interface Disaster extends Document {
   disasterType: string;
-  address: string;
-  location?: GeoPoint
-  districtId: Types.ObjectId;
+  address: GeoPoint|string;
+  districtId: Types.ObjectId|string;
   severity: string;
-  description?: string;
-  reportedBy: Types.ObjectId;
+  description: string;
+  reportedBy: Types.ObjectId|string;
   resourcesNeeded: string[];
-  volunteersAssigned: Types.ObjectId[];
-  status: string;
+  volunteersAssigned?: Types.ObjectId|string;
+  status?: string;
   createdAt?: Date;
   updatedAt?: Date;
 }

@@ -66,8 +66,7 @@ class UserRepository implements IUserRepository {
       const data = await this.userModel.findOne({ email });
       return data ? data.toObject() : null;
     } catch (error) {
-      const err = error instanceof Error ? error : new Error("Unknown error");
-      throw new RepositoryError(err.message);
+      throw new RepositoryError("Error in findByEmail");
     }
   }
   async save(user: AppUser): Promise<AppUser> {
@@ -76,8 +75,7 @@ class UserRepository implements IUserRepository {
       await data.save();
       return data.toObject();
     } catch (error: unknown) {
-      const err = error instanceof Error ? error : new Error("Unknown error");
-      throw new RepositoryError(err.message);
+      throw new RepositoryError("Error in save");
     }
   }
 
@@ -87,8 +85,7 @@ class UserRepository implements IUserRepository {
       const data = await this.userModel.findById(objectId);
       return data ? data.toObject() : null;
     } catch (error) {
-      const err = error instanceof Error ? error : new Error("Unknown error");
-      throw new RepositoryError(err.message);
+      throw new RepositoryError("Error in findById");
     }
   }
 
@@ -105,8 +102,7 @@ class UserRepository implements IUserRepository {
 
       return data.toObject();
     } catch (error) {
-      const err = error instanceof Error ? error : new Error("Unknown error");
-      throw new RepositoryError(err.message);
+      throw new RepositoryError("Error in updateById");
     }
   }
 }

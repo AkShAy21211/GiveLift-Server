@@ -1,22 +1,17 @@
+
 export interface CreateDisasterReportDto {
-  place: string;
-  country: string;
-  state: string;
-  district: string;
+  address: string;
+  districtId: string;
   disasterType:string;
-  severityLevel: "low" | "moderate" | "high" | "critical" | "catastrophic";
-  peopleAffected: number;
-  situationDescription: string;
+  severity: "low" | "moderate" | "high" | "critical" | "catastrophic";
+  description: string;
   resourcesNeeded: string[];
 }
 export interface UpdateDisasterReportDto {
-  place?: string;
-  country?: string;
-  state?: string;
+  address?: string;
   district?: string;
   disasterType?:string;
   severityLevel?: "low" | "moderate" | "high" | "critical" | "catastrophic";
-  peopleAffected?: number;
   situationDescription?: string;
   resourcesNeeded?: string[];
 }

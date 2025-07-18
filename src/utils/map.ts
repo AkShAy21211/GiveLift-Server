@@ -17,6 +17,7 @@ export async function geocodeAddress(address: string) {
     }
   } catch (err: any) {
     console.error("Google geocoding failed:", err.message);
+    throw new Error("Google geocoding failed")
   }
 
   return null;

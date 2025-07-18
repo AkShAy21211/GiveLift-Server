@@ -15,7 +15,6 @@ const userSchema = new Schema<AppUser>(
     name: {
       type: String,
       required: true,
-      unique: true,
     },
     email: {
       type: String,
@@ -69,7 +68,6 @@ const userSchema = new Schema<AppUser>(
   }
 );
 
-userSchema.index({ username: 1 }, { unique: true });
 userSchema.index({ email: 1 }, { unique: true });
 userSchema.index({ role: 1 });
 userSchema.index({ "address.district": 1, role: 1 });

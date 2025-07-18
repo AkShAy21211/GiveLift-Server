@@ -4,13 +4,23 @@ import IUserUseCase from "../interfaces/IUserUseCase";
 
 class UserUseCase implements IUserUseCase {
   constructor(private _repository: IUserRepository) {}
-  getUser({filters, sort, page, limit}: { filters?: Record<string,any>; sort?: any; page?: number; limit?: number }): Promise<AppUser[]> {
+  getUser({
+    filters,
+    sort,
+    page,
+    limit,
+  }: {
+    filters?: Record<string, any>;
+    sort?: any;
+    page?: number;
+    limit?: number;
+  }): Promise<AppUser[]> {
     try {
       return this._repository.find({
         filters,
         sort,
         page,
-        limit
+        limit,
       });
     } catch (error) {
       throw new Error("Error getting AppUser");
@@ -61,11 +71,11 @@ class UserUseCase implements IUserUseCase {
     try {
       const newUser = await this._repository.save({
         ...user,
-        password:"",
+        password: "",
       });
       return newUser;
     } catch (error) {
-      throw error;
+      throw new Error("Error creating AppUser");
     }
   }
 }

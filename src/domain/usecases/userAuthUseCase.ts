@@ -1,5 +1,6 @@
 import IEmailService from "../../infrastructure/interfaces/IEmailService";
 import IUserRepository from "../../infrastructure/interfaces/IUserRepository";
+import { RepositoryError } from "../../shared/errors/RepositoryError";
 import BCrypt from "../../utils/bcrypt";
 import JsonWebToken from "../../utils/jwt";
 import { generateResetToken, hashToken } from "../../utils/token";
@@ -17,8 +18,6 @@ class UserAuthUseCase implements IUserAuthUseCase {
     name: string,
     email: string,
     phone: string,
-    country: string,
-    state: string,
     district: string,
     password: string,
     role: string
@@ -37,8 +36,6 @@ class UserAuthUseCase implements IUserAuthUseCase {
         phone,
         password: hashedPassword as string,
         address: {
-          country,
-          state,
           district,
         },
         role,
@@ -51,6 +48,9 @@ class UserAuthUseCase implements IUserAuthUseCase {
       }
       return false;
     } catch (error) {
+      if (error instanceof RepositoryError) {
+        throw new Error("Error initializing state coordinator");
+      }
       throw error;
     }
   }
@@ -58,8 +58,6 @@ class UserAuthUseCase implements IUserAuthUseCase {
     name: string,
     email: string,
     phone: string,
-    country: string,
-    state: string,
     district: string,
     password: string,
     role: string
@@ -82,8 +80,6 @@ class UserAuthUseCase implements IUserAuthUseCase {
         phone,
         password: hashedPassword as string,
         address: {
-          country,
-          state,
           district,
         },
         role,
@@ -92,6 +88,10 @@ class UserAuthUseCase implements IUserAuthUseCase {
 
       await this._userRepository.save(newUser as AppUser);
     } catch (error) {
+      console.error("Error registering user: ", error);
+      if(error instanceof RepositoryError){
+        throw new Error("Registration failed");
+      }
       throw error;
     }
   }
@@ -126,6 +126,10 @@ class UserAuthUseCase implements IUserAuthUseCase {
 
       return { user, token };
     } catch (error) {
+      console.error("Error logging in user: ", error);
+      if (error instanceof RepositoryError) {
+        throw new Error("Login failed");
+      }
       throw error;
     }
   }
@@ -138,6 +142,7 @@ class UserAuthUseCase implements IUserAuthUseCase {
       }
 
       const { token, hash } = generateResetToken();
+
       await this._userRepository.updateById(user._id as any, {
         resetToken: hash,
         resetTokenExpires: new Date(Date.now() + 1000 * 60 * 15),
@@ -145,15 +150,37 @@ class UserAuthUseCase implements IUserAuthUseCase {
 
       const resetLink = `${process.env.CLIENT_URL}/reset-password?token=${token}`;
 
+      const htmlContent = `
+      <div style="font-family: Arial, sans-serif; color: #333; line-height: 1.5;">
+        <h2>Password Reset Request</h2>
+        <p>Hello ${user.name || "User"},</p>
+        <p>We received a request to reset your password. Click the button below to reset it:</p>
+        <a href="${resetLink}" 
+           style="display: inline-block; margin: 16px 0; padding: 12px 20px; background-color: #007BFF; color: white; text-decoration: none; border-radius: 4px;">
+          Reset Password
+        </a>
+        <p>If the button doesn't work, you can also copy and paste this link into your browser:</p>
+        <p><a href="${resetLink}">${resetLink}</a></p>
+        <p><strong>Note:</strong> This link will expire in 15 minutes for your security.</p>
+        <p>If you didn't request a password reset, you can ignore this email.</p>
+        <br/>
+        <p>Thanks,<br/>The Support Team</p>
+      </div>
+    `;
+
       await this._emailService.sendEmail(
         [user.email],
-        "Reset Password",
-        resetLink
+        "Reset Your Password",
+        htmlContent
       );
     } catch (error) {
+      if (error instanceof RepositoryError) {
+        throw new Error("Error while sending reset password email");
+      }
       throw error;
     }
   }
+
   async resetPassword(token: string, password: string): Promise<boolean> {
     try {
       if (!token) {
@@ -192,6 +219,9 @@ class UserAuthUseCase implements IUserAuthUseCase {
 
       return true;
     } catch (error) {
+      if (error instanceof RepositoryError) {
+        throw new Error("Error reset password");
+      }
       throw error;
     }
   }

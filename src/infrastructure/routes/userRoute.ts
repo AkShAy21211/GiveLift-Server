@@ -16,13 +16,17 @@ const userController = new UserController(
 router.get("/", (req, res) => {
   userController.getUserController(req, res);
 });
-router.post("/create", (req, res) => {
+router.post("/create", validate(createUser),(req, res) => {
   userController.createUserController(req, res);
 });
 
-router.put("/:id", validate(updateUser), (req, res) => {
-  userController.updateUserController(req, res);
-});
+router.put(
+  "/:id",
+  validate(updateUser),
+  (req: Request<{ id: string }>, res: Response) => {
+    userController.updateUserController(req, res);
+  }
+);
 
 router.patch("/:id/deactivate", (req, res) => {
   userController.deActivateUserController(req, res);

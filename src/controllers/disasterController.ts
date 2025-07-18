@@ -4,6 +4,7 @@ import {
   CreateDisasterReportDto,
   UpdateDisasterReportDto,
 } from "../dtos/disasterDto";
+import { Disaster } from "../domain/entities/Disaster";
 
 class DisasterController {
   constructor(private _disasterUseCase: IDisasterUseCase) {}
@@ -31,18 +32,30 @@ class DisasterController {
     req: Request<{}, {}, CreateDisasterReportDto>,
     res: Response
   ) {
-    const disaster = req.body as any;
+    const {
+      description,
+      disasterType,
+      districtId,
+      address,
+      resourcesNeeded,
+      severity,
+    } = req.body;
     const cookie = req.cookies.currentUser;
-    const currentUser = cookie ? JSON.parse(cookie) : null;    
+    const currentUser = cookie ? JSON.parse(cookie) : null;
     if (!currentUser) {
       return res.status(401).json({ message: "Unauthorized" });
     }
 
     try {
       const disasterCreated = await this._disasterUseCase.create({
-        ...disaster,
-        reportedBy: currentUser?._id,
-      });
+        description,
+        disasterType,
+        districtId,
+        address,
+        resourcesNeeded,
+        severity,
+        reportedBy: currentUser._id,
+      } as Disaster);
       res.status(201).json(disasterCreated);
     } catch (error: any) {
       console.log(error);

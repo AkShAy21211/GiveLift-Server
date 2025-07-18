@@ -1,5 +1,5 @@
 import { Model } from "mongoose";
-import Donation from "../../domain/entities/Donation";
+import { Donation } from "../../domain/entities/Donation";
 import IDonationRepository from "../interfaces/IDonationRepository";
 import { RepositoryError } from "../../shared/errors/RepositoryError";
 

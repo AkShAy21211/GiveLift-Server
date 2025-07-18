@@ -7,12 +7,16 @@ const geoPointSchema = new Schema<GeoPoint>(
       type: String,
       enum: ["Point"],
       required: true,
-      default:"Point"
+      default: "Point",
     },
     coordinates: {
       type: [Number, Number],
       required: true,
     },
+    label:{
+      type: String,
+      required: true,
+    }
   },
   { _id: false }
 );
@@ -24,14 +28,9 @@ const disasterSchema = new Schema<Disaster>(
       required: true,
     },
     address: {
-      type: String,
-      required: true,
-    },
-    location: {
       type: geoPointSchema,
       required: true,
     },
-
     districtId: {
       type: Schema.Types.ObjectId,
       ref: "District",
@@ -60,7 +59,7 @@ const disasterSchema = new Schema<Disaster>(
     },
     status: {
       type: String,
-      enum: ["reported", "in_progress", "resolved", "closed"],
+      enum: ["reported","verified", "in_progress", "resolved", "closed"],
       default: "reported",
     },
   },

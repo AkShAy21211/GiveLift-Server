@@ -17,7 +17,7 @@ class DistrictUseCase implements IDistrictUseCase {
         projection: params?.projection,
       });
     } catch (error) {
-      throw error;
+      throw new Error("Error getting all districts");
     }
   }
 }

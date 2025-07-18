@@ -15,16 +15,13 @@ class UserAuthController {
     req: Request<{}, {}, InitStateCoordinatorDto>,
     res: Response
   ) {
-    const { name, email, password, phone, address, district, state, country } =
-      req.body;
+    const { name, email, password, phone, district } = req.body;
     try {
       const role = ROLES.STATE_COORDINATOR;
       await this._useCase.initializeStateCoordinator(
         name,
         email,
         phone,
-        country,
-        state,
         district,
         password,
         role
@@ -43,15 +40,13 @@ class UserAuthController {
     req: Request<{}, {}, RegisterUserDto>,
     res: Response
   ) {
-    const { name, email, phone, password, country, state, district } = req.body;
+    const { name, email, phone, password, district } = req.body;
     const role = ROLES.GENERAL_USER;
     try {
       await this._useCase.register(
         name,
         email,
         phone,
-        country,
-        state,
         district,
         password,
         role

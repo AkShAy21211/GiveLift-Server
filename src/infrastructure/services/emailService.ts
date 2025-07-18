@@ -13,7 +13,8 @@ class EmailService implements IEmailService {
       from: "Givelift <noreply@givelift.xyz>",
       to,
       subject,
-      html: body,
+      html: body
+      
     });
     
   }

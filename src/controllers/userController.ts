@@ -29,7 +29,7 @@ class UserController {
     req: Request<{}, {}, CreateUserDto>,
     res: Response
   ) {
-    const { name, email, phone, country, state, district, role } = req.body;
+    const { name, email, phone, district, role, isVolunteer } = req.body;
 
     try {
       await this._userUseCase.create({
@@ -37,12 +37,10 @@ class UserController {
         email,
         phone,
         address: {
-          country,
-          state,
           district,
         },
         role,
-        isVolunteer: false,
+        isVolunteer,
       } as AppUser);
       return res.status(201).json({ message: "User created successfully" });
     } catch (error: any) {
@@ -53,10 +51,10 @@ class UserController {
   }
 
   async updateUserController(
-    req: Request<{}, {}, UpdateUserDto>,
+    req: Request<{ id: string }, {}, UpdateUserDto>,
     res: Response
   ) {
-    const { id } = req.params as any;
+    const { id } = req.params;
     const user = req.body;
 
     try {
@@ -71,17 +69,13 @@ class UserController {
         .json({ message: error?.message || "Something went wrong" });
     }
   }
-  async deActivateUserController(
-    req: Request<{}, {}, UpdateUserDto>,
-    res: Response
-  ) {
-    const { id } = req.params as any;
+  async deActivateUserController(req: Request<{ id: string }>, res: Response) {
+    const { id } = req.params;
 
     try {
       await this._userUseCase.deActivate(id);
       return res.status(200).json({ message: "User deactivated successfully" });
     } catch (error: any) {
-      
       if (error.name === "NotFoundError") {
         return res.status(404).json({ message: error.message });
       }
@@ -90,11 +84,8 @@ class UserController {
         .json({ message: error?.message || "Something went wrong" });
     }
   }
-  async restoreUserController(
-    req: Request<{}, {}, UpdateUserDto>,
-    res: Response
-  ) {
-    const { id } = req.params as any;
+  async restoreUserController(req: Request<{ id: string }>, res: Response) {
+    const { id } = req.params;
 
     try {
       await this._userUseCase.restore(id);

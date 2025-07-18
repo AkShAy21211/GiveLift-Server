@@ -5,8 +5,6 @@ interface IUserAuthUseCase {
     name: string,
     email: string,
     phone: string,
-    country: string,
-    state: string,
     district: string,
     password: string,
     role: string
@@ -19,8 +17,6 @@ interface IUserAuthUseCase {
     name: string,
     email: string,
     phone: string,
-    country: string,
-    state: string,
     district: string,
     password: string,
     role: string

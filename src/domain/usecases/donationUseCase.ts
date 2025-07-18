@@ -1,6 +1,6 @@
 import IDonationRepository from "../../infrastructure/interfaces/IDonationRepository";
 import IUserRepository from "../../infrastructure/interfaces/IUserRepository";
-import Donation from "../entities/Donation";
+import { Donation } from "../entities/Donation";
 import IDonationUseCase from "../interfaces/IDonationUseCase";
 
 class DonationUseCase implements IDonationUseCase {
@@ -8,24 +8,22 @@ class DonationUseCase implements IDonationUseCase {
     private _repository: IDonationRepository,
     private _userRepo: IUserRepository
   ) {}
-  async createDonation(donatedBy:string,donation: Donation): Promise<Donation> {
+  async createDonation(
+    donatedBy: string,
+    donation: Donation
+  ): Promise<Donation> {
     try {
-      const donatedUser = await this._userRepo.findById(
-        donatedBy as string
-      );
-      const country = donatedUser?.country || "";
-      const state = donatedUser?.state  || "";
-      const district = donatedUser?.district  || "";
+      const donatedUser = await this._userRepo.findById(donatedBy as string);
+
+      const district = donatedUser?.address?.district || "";
 
       return await this._repository.create({
         ...donation,
-        country,
-        state,
         donatedBy,
         district,
       });
     } catch (error) {
-      throw error;
+      throw new Error("Error creating donation");
     }
   }
   async getAllDonations(): Promise<Donation[]> {
